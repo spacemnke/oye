@@ -32,14 +32,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func takeShots(into folder: String) {
+        func note(_ text: String) { FileHandle.standardError.write(Data(("shots: " + text + "\n").utf8)) }
         let dir = URL(fileURLWithPath: folder, isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         // The designs open Ines's thread.
         guard let open = store.people.first(where: { $0.name.hasPrefix("Ines") }) ?? store.people.first else { return }
-        Shots.save(ChatView(store: store, personID: open.id), to: dir.appendingPathComponent("chat.png"))
-        Shots.save(HomeView(store: store), to: dir.appendingPathComponent("home.png"))
-        Shots.saveStrip(store: store, open: open.id, to: dir.appendingPathComponent("faces.png"))
+        // The real panel first, for the screen capture; the drawn copies follow.
+        note("opening the panel")
         faces?.showChat(open.id)
+        note("panel open")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) { [weak self] in
+            guard let self else { return }
+            note("drawing faces")
+            Shots.saveStrip(store: self.store, open: open.id, to: dir.appendingPathComponent("faces.png"))
+            note("drawing chat")
+            Shots.save(ChatView(store: self.store, personID: open.id), to: dir.appendingPathComponent("chat.png"))
+            note("drawing home")
+            Shots.save(HomeView(store: self.store), to: dir.appendingPathComponent("home.png"))
+            note("done")
+        }
     }
 
     /// Someone opened an invite link (oye://join/CODE).

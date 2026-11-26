@@ -68,12 +68,19 @@ jobs:
         continue-on-error: true
         run: |
           mkdir -p /tmp/shots
-          OYE_DEMO=1 OYE_SHOTS=/tmp/shots .build/debug/Oye &
+          OYE_DEMO=1 OYE_SHOTS=/tmp/shots .build/debug/Oye > /tmp/app.log 2>&1 &
           APP=$!
-          sleep 8
+          sleep 4
           screencapture -x /tmp/shots/screen.png || echo "no screen capture"
+          sleep 6
+          # If it's stuck, say where.
+          if [ ! -f /tmp/shots/home.png ]; then sample $APP 2 -file /tmp/sample.txt > /dev/null 2>&1 || true; fi
           kill $APP || true
-          ls -la /tmp/shots
+          {
+            echo "---- app output"; cat /tmp/app.log
+            echo "---- shots"; ls -la /tmp/shots
+            if [ -f /tmp/sample.txt ]; then echo "---- sample"; head -120 /tmp/sample.txt; fi
+          } >> /tmp/mac.log 2>&1
 
       - name: Package Oye.app
         if: ${{ inputs.package }}
