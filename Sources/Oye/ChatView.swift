@@ -98,6 +98,8 @@ struct ChatView: View {
             HStack(spacing: 8) {
                 TextField("", text: $draft, prompt: Text("Text \(firstName)").foregroundColor(Theme.muted))
                     .textFieldStyle(.plain)
+                    .focusEffectDisabled()
+            .focusEffectDisabled()
                     .font(Theme.font(16))
                     .foregroundStyle(Theme.ink)
                     .focused($typing)

@@ -48,9 +48,9 @@ enum Avatar {
 /// larger inside a ring. One image, so the faces can overlap; `frames` says where each one is.
 struct FaceStrip {
     static let height: CGFloat = 24
-    static let face: CGFloat = 17
-    static let openFace: CGFloat = 20.5
-    static let overlap: CGFloat = 3.5
+    static let face: CGFloat = 16
+    static let openFace: CGFloat = 19
+    static let overlap: CGFloat = 3
     static let pad: CGFloat = 5
 
     let people: [Person]
@@ -90,13 +90,13 @@ struct FaceStrip {
                 // Cut a gap out of whatever is underneath, so faces read as separate.
                 context.compositingOperation = .destinationOut
                 NSColor.black.setFill()
-                NSBezierPath(ovalIn: rect.insetBy(dx: isOpen ? -2.2 : -1.2, dy: isOpen ? -2.2 : -1.2)).fill()
+                NSBezierPath(ovalIn: rect.insetBy(dx: isOpen ? -2.0 : -1.0, dy: isOpen ? -2.0 : -1.0)).fill()
                 context.compositingOperation = .sourceOver
                 if isOpen {
                     // The ring around the open face, in the menu bar's own text colour.
                     NSColor.labelColor.setStroke()
-                    let ring = NSBezierPath(ovalIn: rect.insetBy(dx: -1.5, dy: -1.5))
-                    ring.lineWidth = 1.3
+                    let ring = NSBezierPath(ovalIn: rect.insetBy(dx: -1.4, dy: -1.4))
+                    ring.lineWidth = 1.2
                     ring.stroke()
                 }
                 Avatar.draw(person, photo: photo(person), in: rect, alpha: here(person) || isOpen ? 1 : 0.45)

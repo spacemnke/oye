@@ -140,6 +140,7 @@ struct HomeView: View {
     private func field(_ prompt: String, text: Binding<String>, submit: @escaping () -> Void) -> some View {
         TextField(prompt, text: text)
             .textFieldStyle(.plain)
+            .focusEffectDisabled()
             .font(Theme.font(15))
             .foregroundStyle(Theme.ink)
             .onSubmit(submit)

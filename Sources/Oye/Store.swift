@@ -267,9 +267,9 @@ final class Store: ObservableObject {
         func id(_ n: Int) -> UUID { UUID(uuidString: String(format: "00000000-0000-0000-0000-%012d", n))! }
         let now = Date()
         let you = Person(id: id(1), name: "You", lastSeen: now)
-        let mara = Person(id: id(11), name: "Mara Okafor", lastSeen: now)
+        let mara = Person(id: id(11), name: "Mara", lastSeen: now)
         let leo = Person(id: id(22), name: "Leo", lastSeen: now)
-        let ines = Person(id: id(33), name: "Ines Marin", lastSeen: now)
+        let ines = Person(id: id(33), name: "Ines", lastSeen: now)
         let tom = Person(id: id(44), name: "Tom", lastSeen: now)
         me = you
         people = [mara, leo, ines, tom]
