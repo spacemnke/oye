@@ -1,4 +1,5 @@
 import Foundation
+import AppKit
 import Supabase
 import OyeCore
 
@@ -252,30 +253,45 @@ final class Store: ObservableObject {
         }
     }
 
+    // MARK: Photos
+
+    private var photos: [UUID: NSImage] = [:]
+
+    /// Their face photo, if they have one. Real people get photos with file drops; until then
+    /// only demo mode's placeholder people have them.
+    func photo(for person: Person) -> NSImage? { photos[person.id] }
+
     // MARK: Demo
 
     private func loadDemo() {
         func id(_ n: Int) -> UUID { UUID(uuidString: String(format: "00000000-0000-0000-0000-%012d", n))! }
         let now = Date()
         let you = Person(id: id(1), name: "You", lastSeen: now)
-        let ines = Person(id: id(12), name: "Ines Marin", lastSeen: now)
-        let leo = Person(id: id(23), name: "Leo", lastSeen: now)
-        let mara = Person(id: id(37), name: "Mara Okafor", lastSeen: nil)
-        let tom = Person(id: id(48), name: "Tom", lastSeen: now)
+        let mara = Person(id: id(11), name: "Mara Okafor", lastSeen: now)
+        let leo = Person(id: id(22), name: "Leo", lastSeen: now)
+        let ines = Person(id: id(33), name: "Ines Marin", lastSeen: now)
+        let tom = Person(id: id(44), name: "Tom", lastSeen: now)
         me = you
-        people = [ines, leo, mara, tom]
-        var all = Conversations()
-        func say(_ body: String, _ from: Person, _ to: Person, _ ago: TimeInterval, read: Bool = true) {
-            all.add(Message(id: UUID(), sender: from.id, recipient: to.id, body: body,
-                            createdAt: now.addingTimeInterval(-ago), readAt: read ? now : nil), me: you.id)
+        people = [mara, leo, ines, tom]
+        for (person, file) in [(mara, "mara"), (leo, "leo"), (ines, "ines"), (tom, "tom")] {
+            if let url = Bundle.module.url(forResource: "Demo", withExtension: nil)?.appendingPathComponent(file + ".jpg") {
+                photos[person.id] = NSImage(contentsOf: url)
+            }
         }
-        say("Did the deck go out?", ines, you, 600)
-        say("Sending it now", you, ines, 560)
-        say("Lunch at two?", ines, you, 300)
-        say("Yes. Usual place", you, ines, 240)
-        say("Oye, bring the charger", ines, you, 60)
-        say("Running five late, start without me", tom, you, 120, read: false)
-        say("Call when you're free", leo, you, 3600)
+        var all = Conversations()
+        func add(_ kind: Message.Kind, _ body: String, _ from: Person, _ to: Person, _ ago: TimeInterval,
+                 file: String? = nil, bytes: Int? = nil, seconds: Double? = nil) {
+            all.add(Message(id: UUID(), sender: from.id, recipient: to.id, kind: kind, body: body, fileName: file,
+                            bytes: bytes, seconds: seconds, createdAt: now.addingTimeInterval(-ago), readAt: now), me: you.id)
+        }
+        // The thread from the designs.
+        add(.text, "Did the deck go out?", ines, you, 600)
+        add(.text, "Sending it now", you, ines, 560)
+        add(.file, "", you, ines, 540, file: "Pitch-v3.key", bytes: 4_200_000)
+        add(.voice, "", ines, you, 300, seconds: 8)
+        add(.text, "Got it, thanks", ines, you, 240)
+        add(.text, "Running five late, start without me", tom, you, 120)
+        add(.text, "Call when you're free", leo, you, 3600)
         conversations = all
         status = .online
     }

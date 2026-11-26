@@ -22,7 +22,9 @@ targets.append(
         dependencies: [
             "OyeCore",
             .product(name: "Supabase", package: "supabase-swift")
-        ]
+        ],
+        // Inter (the typeface in the designs) and the placeholder faces for demo mode.
+        resources: [.copy("Resources/Fonts"), .copy("Resources/Demo")]
     )
 )
 #endif

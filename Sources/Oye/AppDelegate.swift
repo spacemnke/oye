@@ -9,6 +9,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Oye lives in the menu bar; no Dock icon.
         NSApp.setActivationPolicy(.accessory)
+        Theme.registerFonts()
         // CI opens the packaged app once to prove it starts, then quits.
         if ProcessInfo.processInfo.environment["OYE_SMOKE_TEST"] != nil {
             print("Oye started")
@@ -33,11 +34,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func takeShots(into folder: String) {
         let dir = URL(fileURLWithPath: folder, isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        guard let first = store.people.first else { return }
-        Shots.save(ChatView(store: store, personID: first.id), size: NSSize(width: 380, height: 480), to: dir.appendingPathComponent("chat.png"))
-        Shots.save(HomeView(store: store), size: NSSize(width: 340, height: 440), to: dir.appendingPathComponent("home.png"))
-        Shots.saveFaces(store: store, to: dir.appendingPathComponent("faces.png"))
-        faces?.showChat(first.id)
+        // The designs open Ines's thread.
+        guard let open = store.people.first(where: { $0.name.hasPrefix("Ines") }) ?? store.people.first else { return }
+        Shots.save(ChatView(store: store, personID: open.id), to: dir.appendingPathComponent("chat.png"))
+        Shots.save(HomeView(store: store), to: dir.appendingPathComponent("home.png"))
+        Shots.saveStrip(store: store, open: open.id, to: dir.appendingPathComponent("faces.png"))
+        faces?.showChat(open.id)
     }
 
     /// Someone opened an invite link (oye://join/CODE).

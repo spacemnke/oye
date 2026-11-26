@@ -10,14 +10,15 @@ struct HomeView: View {
     @State private var copied = false
 
     var body: some View {
+        PanelShell {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Text("oye")
-                    .font(.system(size: 24, weight: .bold))
+                    .font(Theme.font(26, .bold))
                     .foregroundStyle(Theme.ink)
                 Spacer()
                 Text(statusLine)
-                    .font(.system(size: 12))
+                    .font(Theme.font(13))
                     .foregroundStyle(Theme.muted)
             }
             if store.myName.isEmpty {
@@ -29,17 +30,15 @@ struct HomeView: View {
             }
             if let notice = store.notice {
                 Text(notice)
-                    .font(.system(size: 12))
+                    .font(Theme.font(13))
                     .foregroundStyle(Theme.muted)
             }
-            Spacer(minLength: 0)
             Button("Quit Oye") { NSApp.terminate(nil) }
                 .buttonStyle(.plain)
-                .font(.system(size: 12))
+                .font(Theme.font(13))
                 .foregroundStyle(Theme.muted)
         }
-        .padding(20)
-        .background(Color.white)
+        }
     }
 
     private var statusLine: String {
@@ -53,7 +52,7 @@ struct HomeView: View {
     private var welcome: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("What should people call you?")
-                .font(.system(size: 15, weight: .semibold))
+                .font(Theme.font(16, .semibold))
                 .foregroundStyle(Theme.ink)
             field("Your name", text: $name) { store.setName(name) }
             pill("Continue", filled: true) { store.setName(name) }
@@ -64,32 +63,31 @@ struct HomeView: View {
     private var people: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Your people")
-                .font(.system(size: 13, weight: .semibold))
+                .font(Theme.font(14, .semibold))
                 .foregroundStyle(Theme.ink)
             if store.people.isEmpty {
                 Text("Nobody yet. Send someone an invite and they'll appear as a face in your menu bar.")
-                    .font(.system(size: 13))
+                    .font(Theme.font(14))
                     .foregroundStyle(Theme.muted)
                     .fixedSize(horizontal: false, vertical: true)
             } else {
-                ScrollView {
-                    VStack(spacing: 6) {
+                VStack(spacing: 8) {
+                    VStack(spacing: 8) {
                         ForEach(store.people) { person in
                             HStack(spacing: 10) {
-                                FaceView(person: person, size: 28)
+                                FaceView(person: person, photo: store.photo(for: person), size: 32)
                                 Text(person.name)
-                                    .font(.system(size: 13))
+                                    .font(Theme.font(14))
                                     .foregroundStyle(Theme.ink)
                                 Spacer()
                                 Button("Remove") { store.remove(person.id) }
                                     .buttonStyle(.plain)
-                                    .font(.system(size: 12))
+                                    .font(Theme.font(13))
                                     .foregroundStyle(Theme.muted)
                             }
                         }
                     }
                 }
-                .frame(maxHeight: 120)
             }
         }
     }
@@ -113,7 +111,7 @@ struct HomeView: View {
                     }
                 }
                 Text("Good for a week. Anyone who opens it is linked with you.")
-                    .font(.system(size: 12))
+                    .font(Theme.font(13))
                     .foregroundStyle(Theme.muted)
             } else {
                 pill("Invite someone", filled: true) { store.makeInvite() }
@@ -124,7 +122,7 @@ struct HomeView: View {
     private var joining: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Got an invite?")
-                .font(.system(size: 13, weight: .semibold))
+                .font(Theme.font(14, .semibold))
                 .foregroundStyle(Theme.ink)
             HStack(spacing: 8) {
                 field("Paste the code or link", text: $code, submit: join)
@@ -142,23 +140,23 @@ struct HomeView: View {
     private func field(_ prompt: String, text: Binding<String>, submit: @escaping () -> Void) -> some View {
         TextField(prompt, text: text)
             .textFieldStyle(.plain)
-            .font(.system(size: 14))
+            .font(Theme.font(15))
             .foregroundStyle(Theme.ink)
             .onSubmit(submit)
             .padding(.horizontal, 14)
-            .frame(height: 36)
-            .background(Capsule().fill(Theme.soft))
+            .frame(height: 44)
+            .background(Capsule().fill(Color.white))
             .overlay(Capsule().stroke(Theme.line, lineWidth: 1))
     }
 
     private func pill(_ title: String, filled: Bool, action: @escaping () -> Void) -> some View {
         Button(title, action: action)
             .buttonStyle(.plain)
-            .font(.system(size: 13, weight: .semibold))
+            .font(Theme.font(14, .semibold))
             .foregroundStyle(filled ? Color.white : Theme.ink)
             .padding(.horizontal, 16)
-            .frame(height: 36)
-            .background(Capsule().fill(filled ? Theme.ink : Theme.soft))
+            .frame(height: 44)
+            .background(Capsule().fill(filled ? Theme.ink : Color.white))
             .overlay(Capsule().stroke(filled ? Color.clear : Theme.line, lineWidth: 1))
     }
 }

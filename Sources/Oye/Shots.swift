@@ -5,45 +5,42 @@ import OyeCore
 /// Draws Oye's panels to PNG files, for screenshots without a screen.
 @MainActor
 enum Shots {
-    static func save<Content: View>(_ view: Content, size: NSSize, to url: URL) {
-        let host = NSHostingView(rootView: view.frame(width: size.width, height: size.height).environment(\.colorScheme, .light))
+    /// The view at its own size, on white, at twice the points so it's sharp.
+    static func save<Content: View>(_ view: Content, to url: URL) {
+        let host = NSHostingView(rootView: view.background(Color.white).environment(\.colorScheme, .light))
+        let size = host.fittingSize
         host.frame = NSRect(origin: .zero, size: size)
         let window = NSWindow(contentRect: host.frame, styleMask: [.borderless], backing: .buffered, defer: false)
         window.appearance = NSAppearance(named: .aqua)
         window.contentView = host
         host.layoutSubtreeIfNeeded()
-        // Twice the points, so it's sharp.
-        guard let rep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: Int(size.width * 2), pixelsHigh: Int(size.height * 2),
-                                         bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
-                                         colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0) else { return }
-        rep.size = size
+        guard let rep = bitmap(size, scale: 2) else { return }
         host.cacheDisplay(in: host.bounds, to: rep)
         try? rep.representation(using: .png, properties: [:])?.write(to: url)
     }
 
-    /// The menu bar faces in a row, as they're drawn in the menu bar.
-    static func saveFaces(store: Store, to url: URL) {
-        let people = store.people
-        let step: CGFloat = 30
-        let size = NSSize(width: step * CGFloat(people.count + 1) + 8, height: 30)
-        let image = NSImage(size: size, flipped: false) { _ in
-            NSColor(white: 0.93, alpha: 1).setFill()
-            NSRect(origin: .zero, size: size).fill()
-            for (at, person) in people.enumerated() {
-                let face = Avatar.menuBarImage(for: person, here: store.isHere(person), unread: store.unread(from: person.id) > 0)
-                face.draw(in: NSRect(x: 8 + step * CGFloat(at), y: 4, width: 22, height: 22))
-            }
-            Avatar.homeImage().draw(in: NSRect(x: 8 + step * CGFloat(people.count), y: 6, width: 20, height: 18))
-            return true
-        }
-        guard let rep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: Int(size.width * 4), pixelsHigh: Int(size.height * 4),
-                                         bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
-                                         colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0) else { return }
-        rep.size = size
+    /// The menu bar faces, enlarged, on a menu-bar grey.
+    static func saveStrip(store: Store, open: UUID?, to url: URL) {
+        let strip = FaceStrip(people: store.people, open: open)
+        let image = strip.image(photo: { store.photo(for: $0) }, here: { store.isHere($0) }, unread: { store.unread(from: $0.id) > 0 })
+        let size = NSSize(width: strip.width + 16, height: FaceStrip.height + 8)
+        guard let rep = bitmap(size, scale: 6) else { return }
         NSGraphicsContext.saveGraphicsState()
         NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: rep)
-        image.draw(in: NSRect(origin: .zero, size: size))
+        NSAppearance(named: .aqua)?.performAsCurrentDrawingAppearance {
+            NSColor(white: 0.93, alpha: 1).setFill()
+            NSRect(origin: .zero, size: size).fill()
+            image.draw(in: NSRect(x: 8, y: 4, width: strip.width, height: FaceStrip.height))
+        }
         NSGraphicsContext.restoreGraphicsState()
         try? rep.representation(using: .png, properties: [:])?.write(to: url)
+    }
+
+    private static func bitmap(_ size: NSSize, scale: CGFloat) -> NSBitmapImageRep? {
+        let rep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: Int(size.width * scale), pixelsHigh: Int(size.height * scale),
+                                   bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
+                                   colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)
+        rep?.size = size
+        return rep
     }
 }

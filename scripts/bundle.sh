@@ -23,6 +23,11 @@ BUILD="${OYE_BUILD:-1}"
 /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD" -c "Set :CFBundleShortVersionString 0.1.$BUILD" "$APP/Contents/Info.plist"
 echo "Oye 0.1.$BUILD (build $BUILD)"
 
+# Fonts and demo faces ship inside the SwiftPM resource bundle.
+if [ -d "$BIN/Oye_Oye.bundle" ]; then
+  cp -R "$BIN/Oye_Oye.bundle" "$APP/Contents/Resources/"
+fi
+
 # Anything linked dynamically ships as frameworks next to the binary.
 mkdir -p "$APP/Contents/Frameworks"
 for framework in "$BIN"/*.framework; do
