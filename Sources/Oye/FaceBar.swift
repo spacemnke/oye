@@ -75,6 +75,15 @@ final class FaceBar: NSObject, NSPopoverDelegate {
         refresh()
     }
 
+    /// Opens someone's thread, as if their face had been clicked.
+    func showChat(_ id: UUID) {
+        guard let button = items[id]?.button else { return }
+        show(ChatView(store: store, personID: id), from: button, size: NSSize(width: 380, height: 480))
+        openPerson = id
+        store.markRead(id)
+        refresh()
+    }
+
     func showHome() {
         guard let button = home?.button else { return }
         if openPerson == nil, popover?.isShown == true {

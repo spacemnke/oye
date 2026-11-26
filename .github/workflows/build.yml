@@ -62,6 +62,19 @@ jobs:
             swift test
           } 2>&1 | tee /tmp/mac.log
 
+      # The real app in demo mode (placeholder people, no network): its panels drawn to PNGs, plus a
+      # capture of the screen with a thread open.
+      - name: Screenshots
+        continue-on-error: true
+        run: |
+          mkdir -p /tmp/shots
+          OYE_DEMO=1 OYE_SHOTS=/tmp/shots .build/debug/Oye &
+          APP=$!
+          sleep 8
+          screencapture -x /tmp/shots/screen.png || echo "no screen capture"
+          kill $APP || true
+          ls -la /tmp/shots
+
       - name: Package Oye.app
         if: ${{ inputs.package }}
         env:
@@ -85,6 +98,7 @@ jobs:
         run: |
           mkdir -p /tmp/share && cd /tmp/share && git init -q .
           tail -c 200000 /tmp/mac.log > mac.log 2>/dev/null || echo "no log" > mac.log
+          cp /tmp/shots/*.png . 2>/dev/null || true
           echo "$STATUS $GITHUB_SHA run $GITHUB_RUN_NUMBER" > mac.status
           git add . && git -c user.name=oye-ci -c user.email=oye-ci@users.noreply.github.com commit -qm "mac log for $GITHUB_SHA"
           git push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" HEAD:refs/heads/ci-logs-mac

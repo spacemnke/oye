@@ -19,10 +19,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         faces.install()
         self.faces = faces
         store.start()
+        // Screenshots (OYE_SHOTS=folder, with OYE_DEMO): draw the panels to PNGs and leave a thread open.
+        if let folder = ProcessInfo.processInfo.environment["OYE_SHOTS"] {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in self?.takeShots(into: folder) }
+            return
+        }
         // First run: nobody knows your name yet, so open the Oye panel to ask.
         if store.myName.isEmpty {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in self?.faces?.showHome() }
         }
+    }
+
+    private func takeShots(into folder: String) {
+        let dir = URL(fileURLWithPath: folder, isDirectory: true)
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        guard let first = store.people.first else { return }
+        Shots.save(ChatView(store: store, personID: first.id), size: NSSize(width: 380, height: 480), to: dir.appendingPathComponent("chat.png"))
+        Shots.save(HomeView(store: store), size: NSSize(width: 340, height: 440), to: dir.appendingPathComponent("home.png"))
+        Shots.saveFaces(store: store, to: dir.appendingPathComponent("faces.png"))
+        faces?.showChat(first.id)
     }
 
     /// Someone opened an invite link (oye://join/CODE).

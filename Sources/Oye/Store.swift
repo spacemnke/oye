@@ -24,7 +24,11 @@ final class Store: ObservableObject {
     @Published private(set) var clock = Date()
 
     private static let nameKey = "oye.myName"
-    var myName: String { UserDefaults.standard.string(forKey: Self.nameKey) ?? "" }
+    var myName: String { Self.isDemo ? "You" : UserDefaults.standard.string(forKey: Self.nameKey) ?? "" }
+
+    /// Demo mode (OYE_DEMO=1): placeholder people and threads, and nothing touches the network.
+    /// Used for screenshots and for looking at the app without an account.
+    static let isDemo = ProcessInfo.processInfo.environment["OYE_DEMO"] != nil
 
     private let client = Backend.client()
     private var channel: RealtimeChannelV2?
@@ -82,6 +86,10 @@ final class Store: ObservableObject {
     // MARK: Connecting
 
     func start() {
+        if Self.isDemo {
+            loadDemo()
+            return
+        }
         guard !myName.isEmpty else {
             status = .offline("Tell Oye your name to get started")
             return
@@ -138,7 +146,7 @@ final class Store: ObservableObject {
     /// Quitting: tell people you've gone, so you show as away at once rather than after a minute.
     func signOff(timeout: TimeInterval) async {
         heartbeat?.cancel()
-        guard me != nil else { return }
+        guard me != nil, !Self.isDemo else { return }
         let client = self.client
         await withTaskGroup(of: Void.self) { group in
             group.addTask { _ = try? await client.rpc("oye_sign_off").execute() }
@@ -244,6 +252,34 @@ final class Store: ObservableObject {
         }
     }
 
+    // MARK: Demo
+
+    private func loadDemo() {
+        func id(_ n: Int) -> UUID { UUID(uuidString: String(format: "00000000-0000-0000-0000-%012d", n))! }
+        let now = Date()
+        let you = Person(id: id(1), name: "You", lastSeen: now)
+        let ines = Person(id: id(12), name: "Ines Marin", lastSeen: now)
+        let leo = Person(id: id(23), name: "Leo", lastSeen: now)
+        let mara = Person(id: id(37), name: "Mara Okafor", lastSeen: nil)
+        let tom = Person(id: id(48), name: "Tom", lastSeen: now)
+        me = you
+        people = [ines, leo, mara, tom]
+        var all = Conversations()
+        func say(_ body: String, _ from: Person, _ to: Person, _ ago: TimeInterval, read: Bool = true) {
+            all.add(Message(id: UUID(), sender: from.id, recipient: to.id, body: body,
+                            createdAt: now.addingTimeInterval(-ago), readAt: read ? now : nil), me: you.id)
+        }
+        say("Did the deck go out?", ines, you, 600)
+        say("Sending it now", you, ines, 560)
+        say("Lunch at two?", ines, you, 300)
+        say("Yes. Usual place", you, ines, 240)
+        say("Oye, bring the charger", ines, you, 60)
+        say("Running five late, start without me", tom, you, 120, read: false)
+        say("Call when you're free", leo, you, 3600)
+        conversations = all
+        status = .online
+    }
+
     // MARK: People
 
     func person(_ id: UUID) -> Person? { people.first { $0.id == id } }
@@ -301,6 +337,10 @@ final class Store: ObservableObject {
     func send(_ text: String, to id: UUID) {
         let body = String(text.trimmingCharacters(in: .whitespacesAndNewlines).prefix(4000))
         guard let me, !body.isEmpty else { return }
+        if Self.isDemo {
+            conversations.add(Message(id: UUID(), sender: me.id, recipient: id, body: body, createdAt: Date()), me: me.id)
+            return
+        }
         Task {
             do {
                 let row: MessageRow = try await client.from("oye_messages")
@@ -319,6 +359,7 @@ final class Store: ObservableObject {
     func markRead(_ id: UUID) {
         guard let me, conversations.unread(from: id, me: me.id) > 0 else { return }
         conversations.markRead(from: id, me: me.id, now: Date())
+        if Self.isDemo { return }
         Task { _ = try? await client.rpc("oye_mark_read", params: ["friend_id": id.uuidString.lowercased()]).execute() }
     }
 }
