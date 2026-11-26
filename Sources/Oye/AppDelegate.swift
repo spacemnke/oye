@@ -47,6 +47,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             Shots.saveStrip(store: self.store, open: open.id, to: dir.appendingPathComponent("faces.png"))
             note("drawing chat")
             Shots.save(ChatView(store: self.store, personID: open.id), to: dir.appendingPathComponent("chat.png"))
+            // The recording flow, in each of its states.
+            let now = Date()
+            for (kind, name) in [(Capture.Kind.voice, "voice"), (.video, "video"), (.screen, "screen")] {
+                note("drawing " + name)
+                self.store.capture.start(kind, for: open.id, now: now.addingTimeInterval(-7))
+                self.store.captureNow = now
+                if kind != .screen {
+                    Shots.save(ChatView(store: self.store, personID: open.id), to: dir.appendingPathComponent("recording-\(name).png"))
+                }
+                self.store.capture.stop(now: now)
+                Shots.save(ChatView(store: self.store, personID: open.id), to: dir.appendingPathComponent("review-\(name).png"))
+                self.store.capture.clear()
+            }
             note("drawing home")
             Shots.save(HomeView(store: self.store), to: dir.appendingPathComponent("home.png"))
             note("done")

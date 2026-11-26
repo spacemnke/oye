@@ -157,3 +157,90 @@ final class SVGPathTests: XCTestCase {
         XCTAssertTrue(runs[0].points.contains { abs($0.x - 4.3) < 0.001 && abs($0.y - 9.2) < 0.001 })
     }
 }
+
+final class CaptureTests: XCTestCase {
+    private let ines = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
+    private let leo = UUID(uuidString: "00000000-0000-0000-0000-000000000003")!
+    private func t(_ s: TimeInterval) -> Date { Date(timeIntervalSince1970: 1_000 + s) }
+
+    func testRecordThenReviewThenClear() {
+        var c = Capture()
+        XCTAssertTrue(c.isIdle)
+        XCTAssertTrue(c.start(.voice, for: ines, now: t(0)))
+        XCTAssertEqual(c.recording, .voice)
+        XCTAssertEqual(c.target, ines)
+        XCTAssertEqual(c.elapsed(now: t(7)), 7, accuracy: 0.001)
+        XCTAssertTrue(c.stop(now: t(8)))
+        XCTAssertEqual(c.reviewing, .voice)
+        XCTAssertEqual(c.phase, .review(.voice, seconds: 8))
+        XCTAssertEqual(c.elapsed(now: t(99)), 8, accuracy: 0.001, "the review keeps the length it had")
+        c.clear()
+        XCTAssertTrue(c.isIdle)
+        XCTAssertNil(c.target)
+    }
+
+    func testOnlyOneRecordingAtATime() {
+        var c = Capture()
+        c.start(.screen, for: ines, now: t(0))
+        XCTAssertFalse(c.start(.video, for: leo, now: t(1)))
+        XCTAssertEqual(c.recording, .screen)
+        XCTAssertEqual(c.target, ines)
+        c.stop(now: t(5))
+        XCTAssertFalse(c.start(.voice, for: leo, now: t(6)), "not while one is waiting to be sent")
+    }
+
+    func testASlipOfTheFingerIsThrownAway() {
+        var c = Capture()
+        c.start(.voice, for: ines, now: t(0))
+        XCTAssertFalse(c.stop(now: t(0.2)))
+        XCTAssertTrue(c.isIdle)
+    }
+
+    func testStopsItselfAtTheLimit() {
+        var c = Capture()
+        c.start(.video, for: ines, now: t(0))
+        XCTAssertFalse(c.isOver(now: t(119)))
+        XCTAssertTrue(c.isOver(now: t(120)))
+        c.stop(now: t(500))
+        XCTAssertEqual(c.phase, .review(.video, seconds: Capture.longest), "never longer than the limit")
+    }
+
+    func testStoppingWhenNotRecordingDoesNothing() {
+        var c = Capture()
+        XCTAssertFalse(c.stop(now: t(1)))
+        XCTAssertTrue(c.isIdle)
+    }
+
+    func testWhatEachKindBecomes() {
+        XCTAssertEqual(Capture.Kind.voice.messageKind, .voice)
+        XCTAssertEqual(Capture.Kind.video.messageKind, .video)
+        XCTAssertEqual(Capture.Kind.screen.messageKind, .screen)
+        XCTAssertEqual(Capture.Kind.voice.fileExtension, "m4a")
+        XCTAssertEqual(Capture.Kind.screen.fileExtension, "mov")
+    }
+
+    func testLabels() {
+        XCTAssertEqual(Labels.time(7), "0:07")
+        XCTAssertEqual(Labels.time(83), "1:23")
+        XCTAssertEqual(Labels.time(0), "0:00")
+        XCTAssertEqual(Labels.time(-4), "0:00")
+        XCTAssertEqual(Labels.size(4_200_000), "4.2 MB")
+        XCTAssertEqual(Labels.size(12_000_000), "12.0 MB")
+        XCTAssertEqual(Labels.size(300), "1 KB")
+        XCTAssertEqual(Labels.size(48_000), "48 KB")
+    }
+
+    func testStoragePathPutsBothPeopleInTheFolders() {
+        let id = UUID(uuidString: "AAAAAAAA-0000-0000-0000-000000000009")!
+        XCTAssertEqual(Labels.storagePath(sender: ines, recipient: leo, id: id, fileExtension: "MOV"),
+                       "00000000-0000-0000-0000-000000000002/00000000-0000-0000-0000-000000000003/aaaaaaaa-0000-0000-0000-000000000009.mov")
+        XCTAssertTrue(Labels.storagePath(sender: ines, recipient: leo, id: id, fileExtension: "../x").hasSuffix("000000000009.x"),
+                      "nothing in the extension can climb out of the folder")
+        XCTAssertTrue(Labels.storagePath(sender: ines, recipient: leo, id: id, fileExtension: "").hasSuffix("000000000009"))
+    }
+
+    func testBothPeopleGetTheSameTalkRoom() {
+        XCTAssertEqual(Labels.talkRoom(ines, leo), Labels.talkRoom(leo, ines))
+        XCTAssertTrue(Labels.talkRoom(ines, leo).hasPrefix("oye-00000000-0000-0000-0000-000000000002_"))
+    }
+}

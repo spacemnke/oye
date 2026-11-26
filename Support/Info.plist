@@ -28,6 +28,10 @@
 	<string>public.app-category.social-networking</string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Oye uses the microphone only while you record a voice note or video, or hold to talk.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Oye uses the camera only while you record a video message.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

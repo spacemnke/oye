@@ -4,7 +4,7 @@ import OyeCore
 /// The icons from the designs, drawn from the same paths (an 18-point box unless said otherwise).
 struct Icon: View {
     enum Kind {
-        case mic, clip, wave, file, play
+        case mic, clip, wave, file, play, camera, screen, stop, close
 
         var path: String {
             switch self {
@@ -13,6 +13,10 @@ struct Icon: View {
             case .wave: return "M3 7v4M6 4.5v9M9 6.5v5M12 3v12M15 7v4"
             case .file: return "M4.5 2h6l3 3v11h-9zM10.5 2v3h3"
             case .play: return "M3 1.5l9 5.5-9 5.5z"
+            case .camera: return "M2.5 5.5h8.5a1.5 1.5 0 0 1 1.5 1.5v4a1.5 1.5 0 0 1-1.5 1.5H2.5A1.5 1.5 0 0 1 1 11V7a1.5 1.5 0 0 1 1.5-1.5zM12.5 8l4-2.2v6.4l-4-2.2"
+            case .screen: return "M2.5 3h13a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM6 16h6M9 13v3"
+            case .stop: return "M5 4h8a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"
+            case .close: return "M5 5l8 8M13 5l-8 8"
             }
         }
 
@@ -33,7 +37,7 @@ struct Icon: View {
         let side = size ?? kind.box
         let shape = IconShape(d: kind.path, box: kind.box)
         Group {
-            if kind == .play {
+            if kind == .play || kind == .stop {
                 shape.fill()
             } else {
                 shape.stroke(style: StrokeStyle(lineWidth: kind.stroke * side / kind.box, lineCap: .round, lineJoin: .round))

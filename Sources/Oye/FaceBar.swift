@@ -40,6 +40,13 @@ final class FaceBar: NSObject, NSWindowDelegate {
         strip.button?.action = #selector(stripClicked(_:))
         strip.button?.setAccessibilityLabel("Your people")
         self.strip = strip
+        // Files dragged onto the row are sent to whoever's face they land on.
+        if let button = strip.button {
+            let catcher = DropCatcher(frame: button.bounds)
+            catcher.autoresizingMask = [.width, .height]
+            catcher.dropped = { [weak self] urls, x in self?.dropped(urls, at: x) }
+            button.addSubview(catcher)
+        }
 
         // Any change to people, threads or the clock redraws the faces.
         store.objectWillChange
@@ -53,6 +60,7 @@ final class FaceBar: NSObject, NSWindowDelegate {
 
     private func refresh() {
         guard let strip else { return }
+        followScreenRecording()
         let faces = self.faces
         let store = self.store
         strip.length = faces.width
@@ -60,15 +68,57 @@ final class FaceBar: NSObject, NSWindowDelegate {
         strip.button?.image = faces.image(
             photo: { store.photo(for: $0) },
             here: { store.isHere($0) },
-            unread: { store.unread(from: $0.id) > 0 }
+            unread: { store.unread(from: $0.id) > 0 },
+            live: { store.talkingTo == $0.id || store.hearing == $0.id }
         )
         let waiting = faces.people.filter { store.unread(from: $0.id) > 0 }.map(\.name)
         strip.button?.toolTip = waiting.isEmpty ? "Your people" : "New from " + waiting.joined(separator: ", ")
     }
 
+    // MARK: Screen recording
+
+    private var screenRecording = false
+
+    /// The panel gets out of the way while the screen records, and Oye's icon becomes the stop
+    /// button with the time. Stopping brings the panel back to look at the recording.
+    private func followScreenRecording() {
+        let now = store.capture.recording == .screen
+        if now {
+            if !screenRecording {
+                screenRecording = true
+                if panel != nil { close() }
+                home?.button?.image = Avatar.stopImage()
+                home?.button?.imagePosition = .imageLeading
+                home?.length = NSStatusItem.variableLength
+                home?.button?.toolTip = "Stop recording"
+            }
+            home?.button?.title = " " + Labels.time(store.capture.elapsed(now: store.captureNow))
+        } else if screenRecording {
+            screenRecording = false
+            home?.button?.image = Avatar.homeImage()
+            home?.button?.title = ""
+            home?.button?.imagePosition = .imageOnly
+            home?.length = NSStatusItem.squareLength
+            home?.button?.toolTip = "Oye"
+            if store.capture.reviewing == .screen, let id = store.capture.target, panel == nil {
+                DispatchQueue.main.async { [weak self] in self?.showChat(id) }
+            }
+        }
+    }
+
+    private func dropped(_ urls: [URL], at x: CGFloat) {
+        guard let person = faces.person(at: x) else { return }
+        store.sendFiles(urls, to: person.id)
+        showChat(person.id)
+    }
+
     // MARK: Clicks
 
     @objc private func homeClicked(_ sender: NSStatusBarButton) {
+        if store.capture.recording == .screen {
+            store.stopRecording()
+            return
+        }
         showHome()
     }
 
@@ -188,4 +238,27 @@ final class FloatingPanel: NSPanel {
     }
 
     override var canBecomeKey: Bool { true }
+}
+
+/// Sits over the row of faces and takes files dragged onto it. Clicks pass straight through.
+final class DropCatcher: NSView {
+    var dropped: (([URL], CGFloat) -> Void)?
+
+    override init(frame: NSRect) {
+        super.init(frame: frame)
+        registerForDraggedTypes([.fileURL])
+    }
+
+    required init?(coder: NSCoder) { nil }
+
+    override func hitTest(_ point: NSPoint) -> NSView? { nil }
+
+    override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation { .copy }
+
+    override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+        let urls = sender.draggingPasteboard.readObjects(forClasses: [NSURL.self], options: [.urlReadingFileURLsOnly: true]) as? [URL] ?? []
+        guard !urls.isEmpty else { return false }
+        dropped?(urls, convert(sender.draggingLocation, from: nil).x)
+        return true
+    }
 }

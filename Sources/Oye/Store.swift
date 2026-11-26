@@ -1,5 +1,6 @@
 import Foundation
 import AppKit
+import AVFoundation
 import Supabase
 import OyeCore
 
@@ -14,9 +15,9 @@ final class Store: ObservableObject {
     }
 
     @Published private(set) var status: Status = .connecting
-    @Published private(set) var me: Person?
+    @Published var me: Person?
     @Published private(set) var people: [Person] = []
-    @Published private(set) var conversations = Conversations()
+    @Published var conversations = Conversations()
     /// Your current invite code, once you've asked for one.
     @Published private(set) var inviteCode: String?
     /// One line about the last thing that happened ("Linked with Ines", "Wrong or expired invite").
@@ -31,7 +32,39 @@ final class Store: ObservableObject {
     /// Used for screenshots and for looking at the app without an account.
     static let isDemo = ProcessInfo.processInfo.environment["OYE_DEMO"] != nil
 
-    private let client = Backend.client()
+    let client = Backend.client()
+
+    // Recording and media (the doing is in Media.swift).
+    @Published var capture = Capture()
+    /// The time as of the last tick while recording, for the timer.
+    @Published var captureNow = Date()
+    @Published var sending = false
+    /// The voice note that's playing, if any.
+    @Published var playing: UUID?
+    let recorder = Recorder()
+    var recorded: URL?
+    var captureWatch: Task<Void, Never>?
+    var startingCapture = false
+    var stoppingCapture = false
+    var localFiles: [UUID: URL] = [:]
+    var voicePlayer: AVAudioPlayer?
+
+    // Hold to talk (the doing is in Talk.swift).
+    /// Who you're talking to right now, while you hold.
+    @Published var talkingTo: UUID?
+    /// Whose line you're on, listening.
+    @Published var hearing: UUID?
+    let line = TalkLine()
+    var talkIdle: Task<Void, Never>?
+    private static let dndKey = "oye.doNotDisturb"
+    /// On do not disturb, nobody's voice comes out of this Mac.
+    @Published var doNotDisturb = UserDefaults.standard.bool(forKey: Store.dndKey) {
+        didSet { UserDefaults.standard.set(doNotDisturb, forKey: Self.dndKey) }
+    }
+
+    init() {
+        line.onAlone = { [weak self] in self?.lineWentQuiet() }
+    }
     private var channel: RealtimeChannelV2?
     private var listeners: [Task<Void, Never>] = []
     private var heartbeat: Task<Void, Never>?
@@ -52,7 +85,7 @@ final class Store: ObservableObject {
         var person: Person { Person(id: id, name: name, lastSeen: lastSeen.flatMap(Stamp.parse)) }
     }
 
-    private struct MessageRow: Decodable {
+    struct MessageRow: Decodable {
         let id: UUID
         let sender: UUID
         let recipient: UUID
@@ -207,6 +240,7 @@ final class Store: ObservableObject {
         let linked = channel.postgresChange(InsertAction.self, schema: "public", table: "oye_links", filter: .eq("owner", value: id))
         // Row-level security limits these to you and the people you're linked to.
         let checkIns = channel.postgresChange(UpdateAction.self, schema: "public", table: "oye_people")
+        let talks = channel.postgresChange(InsertAction.self, schema: "public", table: "oye_talks", filter: .eq("callee", value: id))
         listeners.append(Task { [weak self] in
             for await action in toMe { self?.arrived(try? action.decodeRecord(as: MessageRow.self, decoder: JSONDecoder())) }
         })
@@ -218,6 +252,12 @@ final class Store: ObservableObject {
         })
         listeners.append(Task { [weak self] in
             for await action in checkIns { self?.checkedIn(try? action.decodeRecord(as: PersonRow.self, decoder: JSONDecoder())) }
+        })
+        listeners.append(Task { [weak self] in
+            struct TalkRow: Decodable { let caller: UUID }
+            for await action in talks {
+                if let row = try? action.decodeRecord(as: TalkRow.self, decoder: JSONDecoder()) { self?.heard(from: row.caller) }
+            }
         })
         try await channel.subscribeWithError()
         self.channel = channel

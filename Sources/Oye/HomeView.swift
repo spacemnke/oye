@@ -27,6 +27,18 @@ struct HomeView: View {
                 people
                 invite
                 joining
+                Toggle(isOn: $store.doNotDisturb) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Do not disturb")
+                            .font(Theme.font(14, .semibold))
+                            .foregroundStyle(Theme.ink)
+                        Text("Hold to talk won't play out loud on this Mac.")
+                            .font(Theme.font(13))
+                            .foregroundStyle(Theme.muted)
+                    }
+                }
+                .toggleStyle(.switch)
+                .tint(Theme.ink)
             }
             if let notice = store.notice {
                 Text(notice)

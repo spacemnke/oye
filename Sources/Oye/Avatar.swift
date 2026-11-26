@@ -28,6 +28,19 @@ enum Avatar {
         NSGraphicsContext.restoreGraphicsState()
     }
 
+    /// While the screen is recording, Oye's icon becomes a stop button.
+    static func stopImage() -> NSImage {
+        let image = NSImage(size: NSSize(width: 18, height: 18), flipped: false) { _ in
+            Theme.accentNS.setFill()
+            NSBezierPath(ovalIn: NSRect(x: 1, y: 1, width: 16, height: 16)).fill()
+            NSColor.white.setFill()
+            NSBezierPath(roundedRect: NSRect(x: 6, y: 6, width: 6, height: 6), xRadius: 1, yRadius: 1).fill()
+            return true
+        }
+        image.isTemplate = false
+        return image
+    }
+
     /// Oye's own menu bar icon: a ring with a dot beside it. A template, so macOS tints it.
     static func homeImage() -> NSImage {
         let image = NSImage(size: NSSize(width: 20, height: 18), flipped: false) { _ in
@@ -76,7 +89,8 @@ struct FaceStrip {
             ?? frames.min { abs($0.rect.midX - x) < abs($1.rect.midX - x) }?.person
     }
 
-    func image(photo: @escaping (Person) -> NSImage?, here: @escaping (Person) -> Bool, unread: @escaping (Person) -> Bool) -> NSImage {
+    func image(photo: @escaping (Person) -> NSImage?, here: @escaping (Person) -> Bool, unread: @escaping (Person) -> Bool,
+               live: @escaping (Person) -> Bool = { _ in false }) -> NSImage {
         let frames = self.frames
         let open = self.open
         let image = NSImage(size: NSSize(width: max(width, 1), height: Self.height), flipped: false) { _ in
@@ -85,16 +99,18 @@ struct FaceStrip {
             let order = frames.filter { $0.person.id != open } + frames.filter { $0.person.id == open }
             for (person, slot) in order {
                 let isOpen = person.id == open
-                let grow = isOpen ? (Self.openFace - Self.face) / 2 : 0
+                let grow = isOpen || live(person) ? (Self.openFace - Self.face) / 2 : 0
                 let rect = slot.insetBy(dx: -grow, dy: -grow)
                 // Cut a gap out of whatever is underneath, so faces read as separate.
                 context.compositingOperation = .destinationOut
                 NSColor.black.setFill()
-                NSBezierPath(ovalIn: rect.insetBy(dx: isOpen ? -2.0 : -1.0, dy: isOpen ? -2.0 : -1.0)).fill()
+                let ringed = isOpen || live(person)
+                NSBezierPath(ovalIn: rect.insetBy(dx: ringed ? -2.0 : -1.0, dy: ringed ? -2.0 : -1.0)).fill()
                 context.compositingOperation = .sourceOver
-                if isOpen {
-                    // The ring around the open face, in the menu bar's own text colour.
-                    NSColor.labelColor.setStroke()
+                if isOpen || live(person) {
+                    // The ring around the open face, in the menu bar's own text colour. Indigo
+                    // while a line is live with them.
+                    (live(person) ? Theme.accentNS : NSColor.labelColor).setStroke()
                     let ring = NSBezierPath(ovalIn: rect.insetBy(dx: -1.4, dy: -1.4))
                     ring.lineWidth = 1.2
                     ring.stroke()

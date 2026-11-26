@@ -2,7 +2,7 @@ import Foundation
 
 /// One thing sent between two people: a text, a voice note or a file.
 public struct Message: Identifiable, Equatable, Sendable {
-    public enum Kind: String, Sendable { case text, voice, file }
+    public enum Kind: String, Sendable { case text, voice, file, video, screen }
 
     public let id: UUID
     public let sender: UUID
