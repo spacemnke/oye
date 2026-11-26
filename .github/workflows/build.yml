@@ -1,0 +1,90 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      package:
+        description: "Also package Oye.app (universal) and attach it to the run"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  core:
+    # People, messages and invite rules don't need a Mac.
+    runs-on: ubuntu-latest
+    container: swift:6.0
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test OyeCore
+        shell: bash
+        run: |
+          set -o pipefail
+          swift test 2>&1 | tee /tmp/core.log
+      # The log goes to its own branch so it can be read without opening GitHub.
+      - name: Share the log
+        if: always()
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          STATUS: ${{ job.status }}
+        run: |
+          mkdir -p /tmp/share && cd /tmp/share && git init -q .
+          tail -c 200000 /tmp/core.log > core.log 2>/dev/null || echo "no log" > core.log
+          echo "$STATUS $GITHUB_SHA run $GITHUB_RUN_NUMBER" > core.status
+          git add . && git -c user.name=oye-ci -c user.email=oye-ci@users.noreply.github.com commit -qm "core log for $GITHUB_SHA"
+          git push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" HEAD:refs/heads/ci-logs-core
+
+  mac:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        with:
+          path: .build
+          key: spm-${{ runner.os }}-${{ hashFiles('Package.swift') }}
+          restore-keys: spm-${{ runner.os }}-
+
+      - name: Build and test
+        run: |
+          set -o pipefail
+          {
+            xcodebuild -version
+            swift --version
+            swift build
+            swift test
+          } 2>&1 | tee /tmp/mac.log
+
+      - name: Package Oye.app
+        if: ${{ inputs.package }}
+        env:
+          OYE_BUILD: ${{ github.run_number }}
+        run: |
+          set -o pipefail
+          scripts/bundle.sh release 2>&1 | tee -a /tmp/mac.log
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.package }}
+        with:
+          name: Oye
+          path: build/Oye.zip
+          retention-days: 14
+
+      - name: Share the log
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          STATUS: ${{ job.status }}
+        run: |
+          mkdir -p /tmp/share && cd /tmp/share && git init -q .
+          tail -c 200000 /tmp/mac.log > mac.log 2>/dev/null || echo "no log" > mac.log
+          echo "$STATUS $GITHUB_SHA run $GITHUB_RUN_NUMBER" > mac.status
+          git add . && git -c user.name=oye-ci -c user.email=oye-ci@users.noreply.github.com commit -qm "mac log for $GITHUB_SHA"
+          git push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" HEAD:refs/heads/ci-logs-mac
