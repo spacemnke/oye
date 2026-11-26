@@ -48,9 +48,9 @@ enum Avatar {
 /// larger inside a ring. One image, so the faces can overlap; `frames` says where each one is.
 struct FaceStrip {
     static let height: CGFloat = 24
-    static let face: CGFloat = 19
-    static let openFace: CGFloat = 20
-    static let overlap: CGFloat = 4
+    static let face: CGFloat = 17
+    static let openFace: CGFloat = 20.5
+    static let overlap: CGFloat = 3.5
     static let pad: CGFloat = 5
 
     let people: [Person]

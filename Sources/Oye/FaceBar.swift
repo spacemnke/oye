@@ -147,7 +147,7 @@ final class FaceBar: NSObject, NSWindowDelegate {
             let room = Theme.shadowRoom - 8
             x = min(max(x, screen.visibleFrame.minX - room), screen.visibleFrame.maxX - size.width + room)
         }
-        panel.setFrame(NSRect(x: x, y: anchor.y - 6 - size.height, width: size.width, height: size.height), display: true)
+        panel.setFrame(NSRect(x: x, y: anchor.y - 10 - size.height, width: size.width, height: size.height), display: true)
     }
 
     private func close() {

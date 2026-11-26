@@ -72,7 +72,9 @@ jobs:
           APP=$!
           sleep 4
           screencapture -x /tmp/shots/screen.png || echo "no screen capture"
-          sleep 6
+          # Drawing the soft shadow without a graphics card is slow.
+          for _ in $(seq 1 40); do [ -f /tmp/shots/home.png ] && break; sleep 1; done
+          sleep 1
           # If it's stuck, say where.
           if [ ! -f /tmp/shots/home.png ]; then sample $APP 2 -file /tmp/sample.txt > /dev/null 2>&1 || true; fi
           kill $APP || true

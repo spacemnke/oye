@@ -72,18 +72,20 @@ struct ChatView: View {
     }
 
     private var messages: some View {
-        ViewThatFits(in: .vertical) {
-            bubbles
+        // A hidden copy of the bubbles sets the height (capped); the real ones scroll on top of it.
+        CapHeight(cap: Self.tallest) {
+            bubbles.hidden()
+        }
+        .clipped()
+        .overlay {
             ScrollViewReader { proxy in
                 ScrollView {
                     bubbles
                 }
-                .frame(height: Self.tallest)
                 .onAppear { scrollToEnd(proxy) }
                 .onChange(of: thread.count) { _, _ in scrollToEnd(proxy) }
             }
         }
-        .frame(maxHeight: Self.tallest)
     }
 
     private func scrollToEnd(_ proxy: ScrollViewProxy) {
