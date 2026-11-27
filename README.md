@@ -20,5 +20,5 @@ Every push to `main` builds and tests on GitHub. The logs are copied to the `ci-
 
 ## Status
 
-Not released. The database migration in `supabase/migrations` has to be applied to the Talkie
-project before the app can sign anyone in.
+Not released. The migrations and the `oye-talk` function were applied to the Talkie project on
+27 November 2026. Recording, sending and hold to talk have not been tried on a real Mac yet.

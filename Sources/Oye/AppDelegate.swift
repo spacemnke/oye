@@ -12,7 +12,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         Theme.registerFonts()
         // CI opens the packaged app once to prove it starts, then quits.
         if ProcessInfo.processInfo.environment["OYE_SMOKE_TEST"] != nil {
-            print("Oye started")
+            // Say whether the fonts were found, so the package check can tell.
+            print("Oye started, fonts " + (Resources.folder("Fonts") == nil ? "missing" : "found"))
+            fflush(stdout)
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) { NSApp.terminate(nil) }
             return
         }

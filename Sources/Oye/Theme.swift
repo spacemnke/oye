@@ -55,7 +55,7 @@ enum Theme {
 
     /// Makes Inter available to this app (it isn't installed on the Mac).
     static func registerFonts() {
-        guard let folder = Bundle.module.url(forResource: "Fonts", withExtension: nil),
+        guard let folder = Resources.folder("Fonts"),
               let files = try? FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: nil) else { return }
         for file in files where file.pathExtension == "ttf" {
             CTFontManagerRegisterFontsForURL(file as CFURL, .process, nil)

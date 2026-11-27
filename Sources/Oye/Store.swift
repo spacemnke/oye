@@ -314,7 +314,7 @@ final class Store: ObservableObject {
         me = you
         people = [mara, leo, ines, tom]
         for (person, file) in [(mara, "mara"), (leo, "leo"), (ines, "ines"), (tom, "tom")] {
-            if let url = Bundle.module.url(forResource: "Demo", withExtension: nil)?.appendingPathComponent(file + ".jpg") {
+            if let url = Resources.folder("Demo")?.appendingPathComponent(file + ".jpg") {
                 photos[person.id] = NSImage(contentsOf: url)
             }
         }

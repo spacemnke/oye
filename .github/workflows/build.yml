@@ -4,11 +4,6 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-    inputs:
-      package:
-        description: "Also package Oye.app (universal) and attach it to the run"
-        type: boolean
-        default: false
 
 permissions:
   contents: write
@@ -84,8 +79,8 @@ jobs:
             if [ -f /tmp/sample.txt ]; then echo "---- sample"; head -120 /tmp/sample.txt; fi
           } >> /tmp/mac.log 2>&1
 
+      # Every push packages the app, so there's always a current build to install.
       - name: Package Oye.app
-        if: ${{ inputs.package }}
         env:
           OYE_BUILD: ${{ github.run_number }}
         run: |
@@ -93,7 +88,6 @@ jobs:
           scripts/bundle.sh release 2>&1 | tee -a /tmp/mac.log
 
       - uses: actions/upload-artifact@v4
-        if: ${{ inputs.package }}
         with:
           name: Oye
           path: build/Oye.zip
