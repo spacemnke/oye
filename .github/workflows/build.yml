@@ -90,8 +90,22 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: Oye
-          path: build/Oye.zip
+          path: |
+            build/Oye.zip
+            build/Oye-Installer.pkg
           retention-days: 14
+
+      # The installer also goes to its own branch, so it can be fetched without signing in to GitHub.
+      - name: Share the installer
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/built && cd /tmp/built && git init -q .
+          cp "$GITHUB_WORKSPACE/build/Oye-Installer.pkg" .
+          echo "$GITHUB_SHA run $GITHUB_RUN_NUMBER" > build.txt
+          shasum -a 256 Oye-Installer.pkg >> build.txt
+          git add . && git -c user.name=oye-ci -c user.email=oye-ci@users.noreply.github.com commit -qm "installer for $GITHUB_SHA"
+          git push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" HEAD:refs/heads/ci-build
 
       - name: Share the log
         if: always()

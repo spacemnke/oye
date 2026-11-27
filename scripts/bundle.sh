@@ -61,4 +61,9 @@ cat "$CHECK/out.txt"
 grep -q "fonts found" "$CHECK/out.txt" || { echo "The packaged app couldn't find its fonts" >&2; exit 1; }
 
 (cd build && ditto -c -k --keepParent Oye.app Oye.zip)
-echo "Built $APP and build/Oye.zip"
+
+# The installer: double-click it and Oye lands in Applications.
+pkgbuild --component "$APP" --install-location /Applications --identifier com.spacemnke.oye \
+  --version "0.1.$BUILD" "build/Oye-Installer.pkg"
+ls -la build/Oye.zip build/Oye-Installer.pkg
+echo "Built $APP, build/Oye.zip and build/Oye-Installer.pkg"
