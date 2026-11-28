@@ -195,6 +195,9 @@ final class LiveCheck {
         await check("A made-up invite code is turned away", within: 20, { store.notice == "Wrong or expired invite" })
         store.notice = nil
 
+        // Both copies start at the same moment here, which no two real people do. Live updates take a
+        // few seconds to start flowing after sign-in, so give Ana's that long before joining.
+        try? await Task.sleep(nanoseconds: 6_000_000_000)
         mark("ben-joined")
         store.join(invite.text)
         guard await check("Ben joins with Ana's code", within: 30, { store.people.count == 1 }), let ana = store.people.first else { return }
