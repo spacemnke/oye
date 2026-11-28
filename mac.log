@@ -1,0 +1,1918 @@
+Xcode 16.4
+Build version 16F6
+swift-driver version: 1.120.5 Apple Swift version 6.1.2 (swiftlang-6.1.2.1.2 clang-1700.0.13.5)
+Target: arm64-apple-macosx15.0
+[0/1] Planning build
+Building for debugging...
+[0/7] Write sources
+[1/7] Copying Demo
+[2/7] Write sources
+[3/8] Copying Fonts
+[4/8] Write swift-version--79AA4F9932D1E87A.txt
+[6/15] Compiling OyeCore Lineup.swift
+[7/15] Compiling OyeCore Message.swift
+[8/15] Compiling OyeCore Person.swift
+[9/17] Emitting module OyeCore
+[10/17] Compiling OyeCore Capture.swift
+[11/17] Compiling OyeCore Files.swift
+[12/17] Compiling OyeCore Invite.swift
+[13/17] Compiling OyeCore SVGPath.swift
+[14/17] Compiling OyeCore Stamp.swift
+[15/32] Compiling Oye LiveCheck.swift
+/Users/runner/work/oye/oye/Sources/Oye/Media.swift:173:14: warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+171 |             .select()
+172 |             .single()
+173 |             .execute().value
+    |              `- warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+174 |         conversations.add(row.message, me: me.id)
+175 |         // What you just sent is already on this Mac. A recording lives in a temporary file, so it's
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:137:17: warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+135 |         await withCheckedContinuation { (ready: CheckedContinuation<Void, Never>) in
+136 |             DispatchQueue.global(qos: .userInitiated).async {
+137 |                 session.startRunning()
+    |                 `- warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+138 |                 ready.resume()
+139 |             }
+
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVCaptureSession.h:165:12: note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 163 |  */
+ 164 | API_AVAILABLE(macos(10.7), ios(4.0), macCatalyst(14.0), tvos(17.0), visionos(1.0)) API_UNAVAILABLE(watchos)
+ 165 | @interface AVCaptureSession : NSObject
+     |            `- note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 166 | {
+ 167 | @private
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:3:1: warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'AVFoundation'
+  1 | import AppKit
+  2 | import SwiftUI
+  3 | import AVFoundation
+    | `- warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'AVFoundation'
+  4 | import ScreenCaptureKit
+  5 | import OyeCore
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:150:59: warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+148 |         guard let session = camera else { return }
+149 |         camera = nil
+150 |         DispatchQueue.global(qos: .userInitiated).async { session.stopRunning() }
+    |                                                           `- warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+151 |     }
+152 | 
+
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVCaptureSession.h:165:12: note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 163 |  */
+ 164 | API_AVAILABLE(macos(10.7), ios(4.0), macCatalyst(14.0), tvos(17.0), visionos(1.0)) API_UNAVAILABLE(watchos)
+ 165 | @interface AVCaptureSession : NSObject
+     |            `- note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 166 | {
+ 167 | @private
+[16/32] Compiling Oye Media.swift
+/Users/runner/work/oye/oye/Sources/Oye/Media.swift:173:14: warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+171 |             .select()
+172 |             .single()
+173 |             .execute().value
+    |              `- warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+174 |         conversations.add(row.message, me: me.id)
+175 |         // What you just sent is already on this Mac. A recording lives in a temporary file, so it's
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:137:17: warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+135 |         await withCheckedContinuation { (ready: CheckedContinuation<Void, Never>) in
+136 |             DispatchQueue.global(qos: .userInitiated).async {
+137 |                 session.startRunning()
+    |                 `- warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+138 |                 ready.resume()
+139 |             }
+
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVCaptureSession.h:165:12: note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 163 |  */
+ 164 | API_AVAILABLE(macos(10.7), ios(4.0), macCatalyst(14.0), tvos(17.0), visionos(1.0)) API_UNAVAILABLE(watchos)
+ 165 | @interface AVCaptureSession : NSObject
+     |            `- note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 166 | {
+ 167 | @private
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:3:1: warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'AVFoundation'
+  1 | import AppKit
+  2 | import SwiftUI
+  3 | import AVFoundation
+    | `- warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'AVFoundation'
+  4 | import ScreenCaptureKit
+  5 | import OyeCore
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:150:59: warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+148 |         guard let session = camera else { return }
+149 |         camera = nil
+150 |         DispatchQueue.global(qos: .userInitiated).async { session.stopRunning() }
+    |                                                           `- warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+151 |     }
+152 | 
+
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVCaptureSession.h:165:12: note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 163 |  */
+ 164 | API_AVAILABLE(macos(10.7), ios(4.0), macCatalyst(14.0), tvos(17.0), visionos(1.0)) API_UNAVAILABLE(watchos)
+ 165 | @interface AVCaptureSession : NSObject
+     |            `- note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 166 | {
+ 167 | @private
+[17/32] Compiling Oye MoreView.swift
+/Users/runner/work/oye/oye/Sources/Oye/Media.swift:173:14: warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+171 |             .select()
+172 |             .single()
+173 |             .execute().value
+    |              `- warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+174 |         conversations.add(row.message, me: me.id)
+175 |         // What you just sent is already on this Mac. A recording lives in a temporary file, so it's
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:137:17: warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+135 |         await withCheckedContinuation { (ready: CheckedContinuation<Void, Never>) in
+136 |             DispatchQueue.global(qos: .userInitiated).async {
+137 |                 session.startRunning()
+    |                 `- warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+138 |                 ready.resume()
+139 |             }
+
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVCaptureSession.h:165:12: note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 163 |  */
+ 164 | API_AVAILABLE(macos(10.7), ios(4.0), macCatalyst(14.0), tvos(17.0), visionos(1.0)) API_UNAVAILABLE(watchos)
+ 165 | @interface AVCaptureSession : NSObject
+     |            `- note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 166 | {
+ 167 | @private
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:3:1: warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'AVFoundation'
+  1 | import AppKit
+  2 | import SwiftUI
+  3 | import AVFoundation
+    | `- warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'AVFoundation'
+  4 | import ScreenCaptureKit
+  5 | import OyeCore
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:150:59: warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+148 |         guard let session = camera else { return }
+149 |         camera = nil
+150 |         DispatchQueue.global(qos: .userInitiated).async { session.stopRunning() }
+    |                                                           `- warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+151 |     }
+152 | 
+
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVCaptureSession.h:165:12: note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 163 |  */
+ 164 | API_AVAILABLE(macos(10.7), ios(4.0), macCatalyst(14.0), tvos(17.0), visionos(1.0)) API_UNAVAILABLE(watchos)
+ 165 | @interface AVCaptureSession : NSObject
+     |            `- note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 166 | {
+ 167 | @private
+[18/32] Compiling Oye Names.swift
+/Users/runner/work/oye/oye/Sources/Oye/Media.swift:173:14: warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+171 |             .select()
+172 |             .single()
+173 |             .execute().value
+    |              `- warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+174 |         conversations.add(row.message, me: me.id)
+175 |         // What you just sent is already on this Mac. A recording lives in a temporary file, so it's
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:137:17: warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+135 |         await withCheckedContinuation { (ready: CheckedContinuation<Void, Never>) in
+136 |             DispatchQueue.global(qos: .userInitiated).async {
+137 |                 session.startRunning()
+    |                 `- warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+138 |                 ready.resume()
+139 |             }
+
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVCaptureSession.h:165:12: note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 163 |  */
+ 164 | API_AVAILABLE(macos(10.7), ios(4.0), macCatalyst(14.0), tvos(17.0), visionos(1.0)) API_UNAVAILABLE(watchos)
+ 165 | @interface AVCaptureSession : NSObject
+     |            `- note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 166 | {
+ 167 | @private
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:3:1: warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'AVFoundation'
+  1 | import AppKit
+  2 | import SwiftUI
+  3 | import AVFoundation
+    | `- warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'AVFoundation'
+  4 | import ScreenCaptureKit
+  5 | import OyeCore
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:150:59: warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+148 |         guard let session = camera else { return }
+149 |         camera = nil
+150 |         DispatchQueue.global(qos: .userInitiated).async { session.stopRunning() }
+    |                                                           `- warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+151 |     }
+152 | 
+
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVCaptureSession.h:165:12: note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 163 |  */
+ 164 | API_AVAILABLE(macos(10.7), ios(4.0), macCatalyst(14.0), tvos(17.0), visionos(1.0)) API_UNAVAILABLE(watchos)
+ 165 | @interface AVCaptureSession : NSObject
+     |            `- note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 166 | {
+ 167 | @private
+[19/32] Compiling Oye OyeApp.swift
+/Users/runner/work/oye/oye/Sources/Oye/Media.swift:173:14: warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+171 |             .select()
+172 |             .single()
+173 |             .execute().value
+    |              `- warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+174 |         conversations.add(row.message, me: me.id)
+175 |         // What you just sent is already on this Mac. A recording lives in a temporary file, so it's
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:137:17: warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+135 |         await withCheckedContinuation { (ready: CheckedContinuation<Void, Never>) in
+136 |             DispatchQueue.global(qos: .userInitiated).async {
+137 |                 session.startRunning()
+    |                 `- warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+138 |                 ready.resume()
+139 |             }
+
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVCaptureSession.h:165:12: note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 163 |  */
+ 164 | API_AVAILABLE(macos(10.7), ios(4.0), macCatalyst(14.0), tvos(17.0), visionos(1.0)) API_UNAVAILABLE(watchos)
+ 165 | @interface AVCaptureSession : NSObject
+     |            `- note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 166 | {
+ 167 | @private
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:3:1: warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'AVFoundation'
+  1 | import AppKit
+  2 | import SwiftUI
+  3 | import AVFoundation
+    | `- warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'AVFoundation'
+  4 | import ScreenCaptureKit
+  5 | import OyeCore
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:150:59: warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+148 |         guard let session = camera else { return }
+149 |         camera = nil
+150 |         DispatchQueue.global(qos: .userInitiated).async { session.stopRunning() }
+    |                                                           `- warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+151 |     }
+152 | 
+
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVCaptureSession.h:165:12: note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 163 |  */
+ 164 | API_AVAILABLE(macos(10.7), ios(4.0), macCatalyst(14.0), tvos(17.0), visionos(1.0)) API_UNAVAILABLE(watchos)
+ 165 | @interface AVCaptureSession : NSObject
+     |            `- note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 166 | {
+ 167 | @private
+[20/32] Compiling Oye PanelShell.swift
+/Users/runner/work/oye/oye/Sources/Oye/Media.swift:173:14: warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+171 |             .select()
+172 |             .single()
+173 |             .execute().value
+    |              `- warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+174 |         conversations.add(row.message, me: me.id)
+175 |         // What you just sent is already on this Mac. A recording lives in a temporary file, so it's
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:137:17: warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+135 |         await withCheckedContinuation { (ready: CheckedContinuation<Void, Never>) in
+136 |             DispatchQueue.global(qos: .userInitiated).async {
+137 |                 session.startRunning()
+    |                 `- warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+138 |                 ready.resume()
+139 |             }
+
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVCaptureSession.h:165:12: note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 163 |  */
+ 164 | API_AVAILABLE(macos(10.7), ios(4.0), macCatalyst(14.0), tvos(17.0), visionos(1.0)) API_UNAVAILABLE(watchos)
+ 165 | @interface AVCaptureSession : NSObject
+     |            `- note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 166 | {
+ 167 | @private
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:3:1: warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'AVFoundation'
+  1 | import AppKit
+  2 | import SwiftUI
+  3 | import AVFoundation
+    | `- warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'AVFoundation'
+  4 | import ScreenCaptureKit
+  5 | import OyeCore
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:150:59: warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+148 |         guard let session = camera else { return }
+149 |         camera = nil
+150 |         DispatchQueue.global(qos: .userInitiated).async { session.stopRunning() }
+    |                                                           `- warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+151 |     }
+152 | 
+
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVCaptureSession.h:165:12: note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 163 |  */
+ 164 | API_AVAILABLE(macos(10.7), ios(4.0), macCatalyst(14.0), tvos(17.0), visionos(1.0)) API_UNAVAILABLE(watchos)
+ 165 | @interface AVCaptureSession : NSObject
+     |            `- note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 166 | {
+ 167 | @private
+[21/32] Compiling Oye Recorder.swift
+/Users/runner/work/oye/oye/Sources/Oye/Media.swift:173:14: warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+171 |             .select()
+172 |             .single()
+173 |             .execute().value
+    |              `- warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+174 |         conversations.add(row.message, me: me.id)
+175 |         // What you just sent is already on this Mac. A recording lives in a temporary file, so it's
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:137:17: warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+135 |         await withCheckedContinuation { (ready: CheckedContinuation<Void, Never>) in
+136 |             DispatchQueue.global(qos: .userInitiated).async {
+137 |                 session.startRunning()
+    |                 `- warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+138 |                 ready.resume()
+139 |             }
+
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVCaptureSession.h:165:12: note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 163 |  */
+ 164 | API_AVAILABLE(macos(10.7), ios(4.0), macCatalyst(14.0), tvos(17.0), visionos(1.0)) API_UNAVAILABLE(watchos)
+ 165 | @interface AVCaptureSession : NSObject
+     |            `- note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 166 | {
+ 167 | @private
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:3:1: warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'AVFoundation'
+  1 | import AppKit
+  2 | import SwiftUI
+  3 | import AVFoundation
+    | `- warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'AVFoundation'
+  4 | import ScreenCaptureKit
+  5 | import OyeCore
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:150:59: warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+148 |         guard let session = camera else { return }
+149 |         camera = nil
+150 |         DispatchQueue.global(qos: .userInitiated).async { session.stopRunning() }
+    |                                                           `- warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+151 |     }
+152 | 
+
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVCaptureSession.h:165:12: note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 163 |  */
+ 164 | API_AVAILABLE(macos(10.7), ios(4.0), macCatalyst(14.0), tvos(17.0), visionos(1.0)) API_UNAVAILABLE(watchos)
+ 165 | @interface AVCaptureSession : NSObject
+     |            `- note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 166 | {
+ 167 | @private
+[22/38] Compiling Oye AppDelegate.swift
+[23/38] Compiling Oye Avatar.swift
+[24/38] Compiling Oye Backend.swift
+[25/38] Compiling Oye ChatView.swift
+[26/38] Compiling Oye FaceBar.swift
+[27/38] Compiling Oye HomeView.swift
+[28/38] Compiling Oye Icons.swift
+[29/38] Emitting module Oye
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:407:111: warning: non-sendable result type 'PostgrestResponse<[Found]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+405 |         Task {
+406 |             do {
+407 |                 let found: [Found] = try await client.rpc("oye_accept_invite", params: ["invite_code": code]).execute().value
+    |                                                                                                               `- warning: non-sendable result type 'PostgrestResponse<[Found]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+408 |                 try await loadPeople()
+409 |                 notice = found.first.map { "Linked with \($0.name)" } ?? "Linked"
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+[30/38] Compiling Oye Resources.swift
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:154:110: warning: non-sendable result type 'PostgrestResponse<Store.PersonRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+152 |                 _ = try await client.auth.signInAnonymously()
+153 |             }
+154 |             let row: PersonRow = try await client.rpc("oye_ensure_person", params: ["display_name": myName]).execute().value
+    |                                                                                                              `- warning: non-sendable result type 'PostgrestResponse<Store.PersonRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+155 |             me = row.person
+156 |             if inviteCode == nil { inviteCode = savedInvite(goodFor: 0.5) }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:214:99: warning: non-sendable result type 'PostgrestResponse<[Store.PersonRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+212 |         guard let me else { return }
+213 |         // Row-level security returns you and the people you're linked to.
+214 |         let rows: [PersonRow] = try await client.from("oye_people").select("id, name, last_seen").execute().value
+    |                                                                                                   `- warning: non-sendable result type 'PostgrestResponse<[Store.PersonRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+215 |         let known = Set(people.map(\.id))
+216 |         people = rows.map(\.person).filter { $0.id != me.id }.sorted { $0.name.lowercased() < $1.name.lowercased() }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:225:14: warning: non-sendable result type 'PostgrestResponse<[Store.MessageRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+223 |             .order("created_at", ascending: false)
+224 |             .limit(500)
+225 |             .execute().value
+    |              `- warning: non-sendable result type 'PostgrestResponse<[Store.MessageRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+226 |         var all = Conversations()
+227 |         for row in rows { all.add(row.message, me: me.id) }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:293:68: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+291 |                 self.clock = Date()
+292 |                 if beat % 3 == 0 {
+293 |                     _ = try? await self.client.rpc("oye_check_in").execute()
+    |                                                                    `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+294 |                     try? await self.loadPeople()
+295 |                     try? await self.loadMessages()
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:365:71: warning: non-sendable result type 'PostgrestResponse<String>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+363 |     private func newInvite() async -> String? {
+364 |         do {
+365 |             let code: String = try await client.rpc("oye_new_invite").execute().value
+    |                                                                       `- warning: non-sendable result type 'PostgrestResponse<String>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+366 |             inviteCode = code
+367 |             Prefs.store.set(code, forKey: Self.inviteKey)
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:407:111: warning: non-sendable result type 'PostgrestResponse<[Found]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+405 |         Task {
+406 |             do {
+407 |                 let found: [Found] = try await client.rpc("oye_accept_invite", params: ["invite_code": code]).execute().value
+    |                                                                                                               `- warning: non-sendable result type 'PostgrestResponse<[Found]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+408 |                 try await loadPeople()
+409 |                 notice = found.first.map { "Linked with \($0.name)" } ?? "Linked"
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:418:104: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+416 |     func remove(_ id: UUID) {
+417 |         Task {
+418 |             _ = try? await client.rpc("oye_unlink", params: ["friend_id": id.uuidString.lowercased()]).execute()
+    |                                                                                                        `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+419 |             try? await loadPeople()
+420 |         }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:438:22: warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+436 |                     .select()
+437 |                     .single()
+438 |                     .execute().value
+    |                      `- warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+439 |                 conversations.add(row.message, me: me.id)
+440 |             } catch {
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:451:110: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+449 |         conversations.markRead(from: id, me: me.id, now: Date())
+450 |         if Self.isDemo { return }
+451 |         Task { _ = try? await client.rpc("oye_mark_read", params: ["friend_id": id.uuidString.lowercased()]).execute() }
+    |                                                                                                              `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+452 |     }
+453 | }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+[31/38] Compiling Oye Shots.swift
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:154:110: warning: non-sendable result type 'PostgrestResponse<Store.PersonRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+152 |                 _ = try await client.auth.signInAnonymously()
+153 |             }
+154 |             let row: PersonRow = try await client.rpc("oye_ensure_person", params: ["display_name": myName]).execute().value
+    |                                                                                                              `- warning: non-sendable result type 'PostgrestResponse<Store.PersonRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+155 |             me = row.person
+156 |             if inviteCode == nil { inviteCode = savedInvite(goodFor: 0.5) }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:214:99: warning: non-sendable result type 'PostgrestResponse<[Store.PersonRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+212 |         guard let me else { return }
+213 |         // Row-level security returns you and the people you're linked to.
+214 |         let rows: [PersonRow] = try await client.from("oye_people").select("id, name, last_seen").execute().value
+    |                                                                                                   `- warning: non-sendable result type 'PostgrestResponse<[Store.PersonRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+215 |         let known = Set(people.map(\.id))
+216 |         people = rows.map(\.person).filter { $0.id != me.id }.sorted { $0.name.lowercased() < $1.name.lowercased() }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:225:14: warning: non-sendable result type 'PostgrestResponse<[Store.MessageRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+223 |             .order("created_at", ascending: false)
+224 |             .limit(500)
+225 |             .execute().value
+    |              `- warning: non-sendable result type 'PostgrestResponse<[Store.MessageRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+226 |         var all = Conversations()
+227 |         for row in rows { all.add(row.message, me: me.id) }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:293:68: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+291 |                 self.clock = Date()
+292 |                 if beat % 3 == 0 {
+293 |                     _ = try? await self.client.rpc("oye_check_in").execute()
+    |                                                                    `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+294 |                     try? await self.loadPeople()
+295 |                     try? await self.loadMessages()
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:365:71: warning: non-sendable result type 'PostgrestResponse<String>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+363 |     private func newInvite() async -> String? {
+364 |         do {
+365 |             let code: String = try await client.rpc("oye_new_invite").execute().value
+    |                                                                       `- warning: non-sendable result type 'PostgrestResponse<String>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+366 |             inviteCode = code
+367 |             Prefs.store.set(code, forKey: Self.inviteKey)
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:407:111: warning: non-sendable result type 'PostgrestResponse<[Found]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+405 |         Task {
+406 |             do {
+407 |                 let found: [Found] = try await client.rpc("oye_accept_invite", params: ["invite_code": code]).execute().value
+    |                                                                                                               `- warning: non-sendable result type 'PostgrestResponse<[Found]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+408 |                 try await loadPeople()
+409 |                 notice = found.first.map { "Linked with \($0.name)" } ?? "Linked"
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:418:104: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+416 |     func remove(_ id: UUID) {
+417 |         Task {
+418 |             _ = try? await client.rpc("oye_unlink", params: ["friend_id": id.uuidString.lowercased()]).execute()
+    |                                                                                                        `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+419 |             try? await loadPeople()
+420 |         }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:438:22: warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+436 |                     .select()
+437 |                     .single()
+438 |                     .execute().value
+    |                      `- warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+439 |                 conversations.add(row.message, me: me.id)
+440 |             } catch {
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:451:110: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+449 |         conversations.markRead(from: id, me: me.id, now: Date())
+450 |         if Self.isDemo { return }
+451 |         Task { _ = try? await client.rpc("oye_mark_read", params: ["friend_id": id.uuidString.lowercased()]).execute() }
+    |                                                                                                              `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+452 |     }
+453 | }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+[32/38] Compiling Oye Store.swift
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:154:110: warning: non-sendable result type 'PostgrestResponse<Store.PersonRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+152 |                 _ = try await client.auth.signInAnonymously()
+153 |             }
+154 |             let row: PersonRow = try await client.rpc("oye_ensure_person", params: ["display_name": myName]).execute().value
+    |                                                                                                              `- warning: non-sendable result type 'PostgrestResponse<Store.PersonRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+155 |             me = row.person
+156 |             if inviteCode == nil { inviteCode = savedInvite(goodFor: 0.5) }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:214:99: warning: non-sendable result type 'PostgrestResponse<[Store.PersonRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+212 |         guard let me else { return }
+213 |         // Row-level security returns you and the people you're linked to.
+214 |         let rows: [PersonRow] = try await client.from("oye_people").select("id, name, last_seen").execute().value
+    |                                                                                                   `- warning: non-sendable result type 'PostgrestResponse<[Store.PersonRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+215 |         let known = Set(people.map(\.id))
+216 |         people = rows.map(\.person).filter { $0.id != me.id }.sorted { $0.name.lowercased() < $1.name.lowercased() }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:225:14: warning: non-sendable result type 'PostgrestResponse<[Store.MessageRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+223 |             .order("created_at", ascending: false)
+224 |             .limit(500)
+225 |             .execute().value
+    |              `- warning: non-sendable result type 'PostgrestResponse<[Store.MessageRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+226 |         var all = Conversations()
+227 |         for row in rows { all.add(row.message, me: me.id) }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:293:68: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+291 |                 self.clock = Date()
+292 |                 if beat % 3 == 0 {
+293 |                     _ = try? await self.client.rpc("oye_check_in").execute()
+    |                                                                    `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+294 |                     try? await self.loadPeople()
+295 |                     try? await self.loadMessages()
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:365:71: warning: non-sendable result type 'PostgrestResponse<String>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+363 |     private func newInvite() async -> String? {
+364 |         do {
+365 |             let code: String = try await client.rpc("oye_new_invite").execute().value
+    |                                                                       `- warning: non-sendable result type 'PostgrestResponse<String>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+366 |             inviteCode = code
+367 |             Prefs.store.set(code, forKey: Self.inviteKey)
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:407:111: warning: non-sendable result type 'PostgrestResponse<[Found]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+405 |         Task {
+406 |             do {
+407 |                 let found: [Found] = try await client.rpc("oye_accept_invite", params: ["invite_code": code]).execute().value
+    |                                                                                                               `- warning: non-sendable result type 'PostgrestResponse<[Found]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+408 |                 try await loadPeople()
+409 |                 notice = found.first.map { "Linked with \($0.name)" } ?? "Linked"
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:418:104: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+416 |     func remove(_ id: UUID) {
+417 |         Task {
+418 |             _ = try? await client.rpc("oye_unlink", params: ["friend_id": id.uuidString.lowercased()]).execute()
+    |                                                                                                        `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+419 |             try? await loadPeople()
+420 |         }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:438:22: warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+436 |                     .select()
+437 |                     .single()
+438 |                     .execute().value
+    |                      `- warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+439 |                 conversations.add(row.message, me: me.id)
+440 |             } catch {
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:451:110: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+449 |         conversations.markRead(from: id, me: me.id, now: Date())
+450 |         if Self.isDemo { return }
+451 |         Task { _ = try? await client.rpc("oye_mark_read", params: ["friend_id": id.uuidString.lowercased()]).execute() }
+    |                                                                                                              `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+452 |     }
+453 | }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+[33/38] Compiling Oye Talk.swift
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:154:110: warning: non-sendable result type 'PostgrestResponse<Store.PersonRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+152 |                 _ = try await client.auth.signInAnonymously()
+153 |             }
+154 |             let row: PersonRow = try await client.rpc("oye_ensure_person", params: ["display_name": myName]).execute().value
+    |                                                                                                              `- warning: non-sendable result type 'PostgrestResponse<Store.PersonRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+155 |             me = row.person
+156 |             if inviteCode == nil { inviteCode = savedInvite(goodFor: 0.5) }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:214:99: warning: non-sendable result type 'PostgrestResponse<[Store.PersonRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+212 |         guard let me else { return }
+213 |         // Row-level security returns you and the people you're linked to.
+214 |         let rows: [PersonRow] = try await client.from("oye_people").select("id, name, last_seen").execute().value
+    |                                                                                                   `- warning: non-sendable result type 'PostgrestResponse<[Store.PersonRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+215 |         let known = Set(people.map(\.id))
+216 |         people = rows.map(\.person).filter { $0.id != me.id }.sorted { $0.name.lowercased() < $1.name.lowercased() }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:225:14: warning: non-sendable result type 'PostgrestResponse<[Store.MessageRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+223 |             .order("created_at", ascending: false)
+224 |             .limit(500)
+225 |             .execute().value
+    |              `- warning: non-sendable result type 'PostgrestResponse<[Store.MessageRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+226 |         var all = Conversations()
+227 |         for row in rows { all.add(row.message, me: me.id) }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:293:68: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+291 |                 self.clock = Date()
+292 |                 if beat % 3 == 0 {
+293 |                     _ = try? await self.client.rpc("oye_check_in").execute()
+    |                                                                    `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+294 |                     try? await self.loadPeople()
+295 |                     try? await self.loadMessages()
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:365:71: warning: non-sendable result type 'PostgrestResponse<String>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+363 |     private func newInvite() async -> String? {
+364 |         do {
+365 |             let code: String = try await client.rpc("oye_new_invite").execute().value
+    |                                                                       `- warning: non-sendable result type 'PostgrestResponse<String>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+366 |             inviteCode = code
+367 |             Prefs.store.set(code, forKey: Self.inviteKey)
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:407:111: warning: non-sendable result type 'PostgrestResponse<[Found]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+405 |         Task {
+406 |             do {
+407 |                 let found: [Found] = try await client.rpc("oye_accept_invite", params: ["invite_code": code]).execute().value
+    |                                                                                                               `- warning: non-sendable result type 'PostgrestResponse<[Found]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+408 |                 try await loadPeople()
+409 |                 notice = found.first.map { "Linked with \($0.name)" } ?? "Linked"
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:418:104: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+416 |     func remove(_ id: UUID) {
+417 |         Task {
+418 |             _ = try? await client.rpc("oye_unlink", params: ["friend_id": id.uuidString.lowercased()]).execute()
+    |                                                                                                        `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+419 |             try? await loadPeople()
+420 |         }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:438:22: warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+436 |                     .select()
+437 |                     .single()
+438 |                     .execute().value
+    |                      `- warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+439 |                 conversations.add(row.message, me: me.id)
+440 |             } catch {
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:451:110: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+449 |         conversations.markRead(from: id, me: me.id, now: Date())
+450 |         if Self.isDemo { return }
+451 |         Task { _ = try? await client.rpc("oye_mark_read", params: ["friend_id": id.uuidString.lowercased()]).execute() }
+    |                                                                                                              `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+452 |     }
+453 | }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+[34/38] Compiling Oye Theme.swift
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:154:110: warning: non-sendable result type 'PostgrestResponse<Store.PersonRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+152 |                 _ = try await client.auth.signInAnonymously()
+153 |             }
+154 |             let row: PersonRow = try await client.rpc("oye_ensure_person", params: ["display_name": myName]).execute().value
+    |                                                                                                              `- warning: non-sendable result type 'PostgrestResponse<Store.PersonRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+155 |             me = row.person
+156 |             if inviteCode == nil { inviteCode = savedInvite(goodFor: 0.5) }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:214:99: warning: non-sendable result type 'PostgrestResponse<[Store.PersonRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+212 |         guard let me else { return }
+213 |         // Row-level security returns you and the people you're linked to.
+214 |         let rows: [PersonRow] = try await client.from("oye_people").select("id, name, last_seen").execute().value
+    |                                                                                                   `- warning: non-sendable result type 'PostgrestResponse<[Store.PersonRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+215 |         let known = Set(people.map(\.id))
+216 |         people = rows.map(\.person).filter { $0.id != me.id }.sorted { $0.name.lowercased() < $1.name.lowercased() }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:225:14: warning: non-sendable result type 'PostgrestResponse<[Store.MessageRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+223 |             .order("created_at", ascending: false)
+224 |             .limit(500)
+225 |             .execute().value
+    |              `- warning: non-sendable result type 'PostgrestResponse<[Store.MessageRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+226 |         var all = Conversations()
+227 |         for row in rows { all.add(row.message, me: me.id) }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:293:68: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+291 |                 self.clock = Date()
+292 |                 if beat % 3 == 0 {
+293 |                     _ = try? await self.client.rpc("oye_check_in").execute()
+    |                                                                    `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+294 |                     try? await self.loadPeople()
+295 |                     try? await self.loadMessages()
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:365:71: warning: non-sendable result type 'PostgrestResponse<String>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+363 |     private func newInvite() async -> String? {
+364 |         do {
+365 |             let code: String = try await client.rpc("oye_new_invite").execute().value
+    |                                                                       `- warning: non-sendable result type 'PostgrestResponse<String>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+366 |             inviteCode = code
+367 |             Prefs.store.set(code, forKey: Self.inviteKey)
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:407:111: warning: non-sendable result type 'PostgrestResponse<[Found]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+405 |         Task {
+406 |             do {
+407 |                 let found: [Found] = try await client.rpc("oye_accept_invite", params: ["invite_code": code]).execute().value
+    |                                                                                                               `- warning: non-sendable result type 'PostgrestResponse<[Found]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+408 |                 try await loadPeople()
+409 |                 notice = found.first.map { "Linked with \($0.name)" } ?? "Linked"
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:418:104: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+416 |     func remove(_ id: UUID) {
+417 |         Task {
+418 |             _ = try? await client.rpc("oye_unlink", params: ["friend_id": id.uuidString.lowercased()]).execute()
+    |                                                                                                        `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+419 |             try? await loadPeople()
+420 |         }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:438:22: warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+436 |                     .select()
+437 |                     .single()
+438 |                     .execute().value
+    |                      `- warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+439 |                 conversations.add(row.message, me: me.id)
+440 |             } catch {
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:451:110: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+449 |         conversations.markRead(from: id, me: me.id, now: Date())
+450 |         if Self.isDemo { return }
+451 |         Task { _ = try? await client.rpc("oye_mark_read", params: ["friend_id": id.uuidString.lowercased()]).execute() }
+    |                                                                                                              `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+452 |     }
+453 | }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+[35/38] Compiling Oye Transfers.swift
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:154:110: warning: non-sendable result type 'PostgrestResponse<Store.PersonRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+152 |                 _ = try await client.auth.signInAnonymously()
+153 |             }
+154 |             let row: PersonRow = try await client.rpc("oye_ensure_person", params: ["display_name": myName]).execute().value
+    |                                                                                                              `- warning: non-sendable result type 'PostgrestResponse<Store.PersonRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+155 |             me = row.person
+156 |             if inviteCode == nil { inviteCode = savedInvite(goodFor: 0.5) }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:214:99: warning: non-sendable result type 'PostgrestResponse<[Store.PersonRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+212 |         guard let me else { return }
+213 |         // Row-level security returns you and the people you're linked to.
+214 |         let rows: [PersonRow] = try await client.from("oye_people").select("id, name, last_seen").execute().value
+    |                                                                                                   `- warning: non-sendable result type 'PostgrestResponse<[Store.PersonRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+215 |         let known = Set(people.map(\.id))
+216 |         people = rows.map(\.person).filter { $0.id != me.id }.sorted { $0.name.lowercased() < $1.name.lowercased() }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:225:14: warning: non-sendable result type 'PostgrestResponse<[Store.MessageRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+223 |             .order("created_at", ascending: false)
+224 |             .limit(500)
+225 |             .execute().value
+    |              `- warning: non-sendable result type 'PostgrestResponse<[Store.MessageRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+226 |         var all = Conversations()
+227 |         for row in rows { all.add(row.message, me: me.id) }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:293:68: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+291 |                 self.clock = Date()
+292 |                 if beat % 3 == 0 {
+293 |                     _ = try? await self.client.rpc("oye_check_in").execute()
+    |                                                                    `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+294 |                     try? await self.loadPeople()
+295 |                     try? await self.loadMessages()
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:365:71: warning: non-sendable result type 'PostgrestResponse<String>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+363 |     private func newInvite() async -> String? {
+364 |         do {
+365 |             let code: String = try await client.rpc("oye_new_invite").execute().value
+    |                                                                       `- warning: non-sendable result type 'PostgrestResponse<String>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+366 |             inviteCode = code
+367 |             Prefs.store.set(code, forKey: Self.inviteKey)
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:407:111: warning: non-sendable result type 'PostgrestResponse<[Found]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+405 |         Task {
+406 |             do {
+407 |                 let found: [Found] = try await client.rpc("oye_accept_invite", params: ["invite_code": code]).execute().value
+    |                                                                                                               `- warning: non-sendable result type 'PostgrestResponse<[Found]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+408 |                 try await loadPeople()
+409 |                 notice = found.first.map { "Linked with \($0.name)" } ?? "Linked"
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:418:104: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+416 |     func remove(_ id: UUID) {
+417 |         Task {
+418 |             _ = try? await client.rpc("oye_unlink", params: ["friend_id": id.uuidString.lowercased()]).execute()
+    |                                                                                                        `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+419 |             try? await loadPeople()
+420 |         }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:438:22: warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+436 |                     .select()
+437 |                     .single()
+438 |                     .execute().value
+    |                      `- warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+439 |                 conversations.add(row.message, me: me.id)
+440 |             } catch {
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:451:110: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+449 |         conversations.markRead(from: id, me: me.id, now: Date())
+450 |         if Self.isDemo { return }
+451 |         Task { _ = try? await client.rpc("oye_mark_read", params: ["friend_id": id.uuidString.lowercased()]).execute() }
+    |                                                                                                              `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+452 |     }
+453 | }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+[35/38] Write Objects.LinkFileList
+[36/38] Linking Oye
+[37/38] Applying Oye
+Build complete! (28.90s)
+[0/1] Planning build
+Building for debugging...
+[0/6] Write sources
+[1/6] Write swift-version--79AA4F9932D1E87A.txt
+[3/6] Emitting module OyeCoreTests
+[4/6] Compiling OyeCoreTests OyeCoreTests.swift
+[4/6] Write Objects.LinkFileList
+[5/6] Linking OyePackageTests
+Build complete! (4.46s)
+Test Suite 'All tests' started at 2026-11-28 10:32:57.429.
+Test Suite 'OyePackageTests.xctest' started at 2026-11-28 10:32:57.431.
+Test Suite 'CaptureTests' started at 2026-11-28 10:32:57.431.
+Test Case '-[OyeCoreTests.CaptureTests testAFileIsCutIntoEqualPartsWithTheRestLast]' started.
+Test Case '-[OyeCoreTests.CaptureTests testAFileIsCutIntoEqualPartsWithTheRestLast]' passed (0.005 seconds).
+Test Case '-[OyeCoreTests.CaptureTests testAnOpenPanelAlwaysKeepsItsFace]' started.
+Test Case '-[OyeCoreTests.CaptureTests testAnOpenPanelAlwaysKeepsItsFace]' passed (0.001 seconds).
+Test Case '-[OyeCoreTests.CaptureTests testASlipOfTheFingerIsThrownAway]' started.
+Test Case '-[OyeCoreTests.CaptureTests testASlipOfTheFingerIsThrownAway]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.CaptureTests testBigSizesAndPercentRead]' started.
+Test Case '-[OyeCoreTests.CaptureTests testBigSizesAndPercentRead]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.CaptureTests testBothPeopleGetTheSameTalkRoom]' started.
+Test Case '-[OyeCoreTests.CaptureTests testBothPeopleGetTheSameTalkRoom]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.CaptureTests testEveryoneIsShownWhenTheyFit]' started.
+Test Case '-[OyeCoreTests.CaptureTests testEveryoneIsShownWhenTheyFit]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.CaptureTests testFilesExpireAfterThreeDaysAndTextsNever]' started.
+Test Case '-[OyeCoreTests.CaptureTests testFilesExpireAfterThreeDaysAndTextsNever]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.CaptureTests testLabels]' started.
+Test Case '-[OyeCoreTests.CaptureTests testLabels]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.CaptureTests testOnlyOneRecordingAtATime]' started.
+Test Case '-[OyeCoreTests.CaptureTests testOnlyOneRecordingAtATime]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.CaptureTests testRecordThenReviewThenClear]' started.
+Test Case '-[OyeCoreTests.CaptureTests testRecordThenReviewThenClear]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.CaptureTests testStoppingWhenNotRecordingDoesNothing]' started.
+Test Case '-[OyeCoreTests.CaptureTests testStoppingWhenNotRecordingDoesNothing]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.CaptureTests testStopsItselfAtTheLimit]' started.
+Test Case '-[OyeCoreTests.CaptureTests testStopsItselfAtTheLimit]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.CaptureTests testStoragePathPutsBothPeopleInTheFolders]' started.
+Test Case '-[OyeCoreTests.CaptureTests testStoragePathPutsBothPeopleInTheFolders]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.CaptureTests testUnreadThenHereThenRecentGetThePlaces]' started.
+Test Case '-[OyeCoreTests.CaptureTests testUnreadThenHereThenRecentGetThePlaces]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.CaptureTests testWhatEachKindBecomes]' started.
+Test Case '-[OyeCoreTests.CaptureTests testWhatEachKindBecomes]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.CaptureTests testWithNothingToGoOnTheFirstPeopleAreShown]' started.
+Test Case '-[OyeCoreTests.CaptureTests testWithNothingToGoOnTheFirstPeopleAreShown]' passed (0.000 seconds).
+Test Suite 'CaptureTests' passed at 2026-11-28 10:32:57.440.
+	 Executed 16 tests, with 0 failures (0 unexpected) in 0.008 (0.009) seconds
+Test Suite 'OyeCoreTests' started at 2026-11-28 10:32:57.440.
+Test Case '-[OyeCoreTests.OyeCoreTests testAPersonKeepsTheirColour]' started.
+Test Case '-[OyeCoreTests.OyeCoreTests testAPersonKeepsTheirColour]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.OyeCoreTests testFindsACodeHoweverItArrives]' started.
+Test Case '-[OyeCoreTests.OyeCoreTests testFindsACodeHoweverItArrives]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.OyeCoreTests testForgettingSomeoneDropsTheirThread]' started.
+Test Case '-[OyeCoreTests.OyeCoreTests testForgettingSomeoneDropsTheirThread]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.OyeCoreTests testHereUntilTheyGoQuiet]' started.
+Test Case '-[OyeCoreTests.OyeCoreTests testHereUntilTheyGoQuiet]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.OyeCoreTests testInitials]' started.
+Test Case '-[OyeCoreTests.OyeCoreTests testInitials]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.OyeCoreTests testLink]' started.
+Test Case '-[OyeCoreTests.OyeCoreTests testLink]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.OyeCoreTests testReadsPostgresTimestamps]' started.
+Test Case '-[OyeCoreTests.OyeCoreTests testReadsPostgresTimestamps]' passed (0.007 seconds).
+Test Case '-[OyeCoreTests.OyeCoreTests testTheSameMessageTwiceIsOneMessage]' started.
+Test Case '-[OyeCoreTests.OyeCoreTests testTheSameMessageTwiceIsOneMessage]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.OyeCoreTests testThreadsAreKeptByTheOtherPersonOldestFirst]' started.
+Test Case '-[OyeCoreTests.OyeCoreTests testThreadsAreKeptByTheOtherPersonOldestFirst]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.OyeCoreTests testUnreadCountsOnlyWhatTheySentYou]' started.
+Test Case '-[OyeCoreTests.OyeCoreTests testUnreadCountsOnlyWhatTheySentYou]' passed (0.000 seconds).
+Test Suite 'OyeCoreTests' passed at 2026-11-28 10:32:57.450.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 0.010 (0.010) seconds
+Test Suite 'SVGPathTests' started at 2026-11-28 10:32:57.450.
+Test Case '-[OyeCoreTests.SVGPathTests testLinesRelativeAndAbsolute]' started.
+Test Case '-[OyeCoreTests.SVGPathTests testLinesRelativeAndAbsolute]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.SVGPathTests testNumbersRunTogetherWithoutSpaces]' started.
+Test Case '-[OyeCoreTests.SVGPathTests testNumbersRunTogetherWithoutSpaces]' passed (0.001 seconds).
+Test Case '-[OyeCoreTests.SVGPathTests testSeveralStrokesInOnePath]' started.
+Test Case '-[OyeCoreTests.SVGPathTests testSeveralStrokesInOnePath]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.SVGPathTests testSweepPicksTheOtherSide]' started.
+Test Case '-[OyeCoreTests.SVGPathTests testSweepPicksTheOtherSide]' passed (0.000 seconds).
+Test Case '-[OyeCoreTests.SVGPathTests testTheMicsCupHangsBelow]' started.
+Test Case '-[OyeCoreTests.SVGPathTests testTheMicsCupHangsBelow]' passed (0.000 seconds).
+Test Suite 'SVGPathTests' passed at 2026-11-28 10:32:57.453.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+Test Suite 'OyePackageTests.xctest' passed at 2026-11-28 10:32:57.453.
+	 Executed 31 tests, with 0 failures (0 unexpected) in 0.020 (0.022) seconds
+Test Suite 'All tests' passed at 2026-11-28 10:32:57.453.
+	 Executed 31 tests, with 0 failures (0 unexpected) in 0.020 (0.024) seconds
+◇ Test run started.
+↳ Testing Library Version: 124.4
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests passed after 0.001 seconds.
+---- app output
+shots: opening the panel
+shots: panel open
+shots: drawing faces
+shots: drawing chat
+shots: drawing voice
+shots: drawing video
+shots: drawing screen
+shots: drawing the crowd
+shots: drawing home
+shots: done
+/Users/runner/work/_temp/17c3ab9d-9592-402e-86d9-b19d8d79f5bc.sh: line 16:  4074 Terminated: 15          OYE_DEMO=1 OYE_SHOTS=/tmp/shots .build/debug/Oye > /tmp/app.log 2>&1
+---- shots
+total 3192
+drwxr-xr-x  13 runner  wheel     416 Nov 28 10:33 .
+drwxrwxrwt   7 root    wheel     224 Nov 28 10:32 ..
+-rw-r--r--   1 runner  wheel  155198 Nov 28 10:33 chat.png
+-rw-r--r--   1 runner  wheel   74060 Nov 28 10:33 faces-more.png
+-rw-r--r--   1 runner  wheel   70390 Nov 28 10:33 faces.png
+-rw-r--r--   1 runner  wheel  260492 Nov 28 10:33 home.png
+-rw-r--r--   1 runner  wheel   94962 Nov 28 10:33 more.png
+-rw-r--r--   1 runner  wheel  170582 Nov 28 10:33 recording-video.png
+-rw-r--r--   1 runner  wheel  146607 Nov 28 10:33 recording-voice.png
+-rw-r--r--   1 runner  wheel  168980 Nov 28 10:33 review-screen.png
+-rw-r--r--   1 runner  wheel  169142 Nov 28 10:33 review-video.png
+-rw-r--r--   1 runner  wheel  161548 Nov 28 10:33 review-voice.png
+-rw-r--r--@  1 runner  wheel  136863 Nov 28 10:33 screen.png
+Building for production...
+[0/37] Write sources
+[0/37] Copying PrivacyInfo.xcprivacy
+[0/37] Write sources
+[0/37] Copying PrivacyInfo.xcprivacy
+[0/37] Write sources
+[17/37] Write swift-version--79AA4F9932D1E87A.txt
+[18/37] Copying RustLiveKitUniFFI.framework
+[19/38] Compiling CLiveKitProto timestamp.pb.c
+[20/39] Compiling LKObjCHelpers LKObjCHelpers.m
+[22/40] Compiling OyeCore Capture.swift
+[23/41] Compiling IssueReporting ErrorReporting.swift
+[24/41] Compiling LiveKitUniFFI livekit_common.swift
+[25/43] Compiling ConcurrencyExtras ActorIsolated.swift
+[25/43] Copying Fonts
+[27/44] Compiling XCTestDynamicOverlay Deprecations.swift
+[27/44] Copying Demo
+[28/44] Write sources
+[29/44] Copying LiveKitWebRTC.framework
+[30/44] Write sources
+[32/44] Compiling CLiveKitProto pb_encode.c
+[34/45] Compiling Crypto AES-GCM.swift
+[34/45] Compiling CLiveKitProto pb_decode.c
+[35/45] Compiling CLiveKitProto pb_common.c
+[36/45] Compiling CLiveKitProto lk_abi_check.c
+[37/45] Compiling CLiveKitProto livekit_rtc.pb.c
+[38/45] Compiling CLiveKitProto livekit_models.pb.c
+[39/45] Compiling CLiveKitProto livekit_metrics.pb.c
+[40/45] Write sources
+[42/46] Compiling LiveKitNanopb Nanopb.swift
+[43/47] Compiling HTTPTypes HTTP2ErrorCode.swift
+[44/47] Compiling Clocks AnyClock.swift
+[45/48] Compiling Helpers APIKeyFormat.swift
+[46/50] Compiling Storage Codable.swift
+[47/51] Compiling PostgREST Defaults.swift
+[48/52] Compiling RealtimeV2 CallbackManager.swift
+[49/53] Compiling Functions Exports.swift
+[50/54] Compiling Realtime Defaults.swift
+[51/54] Compiling Auth AuthAdmin.swift
+[52/55] Compiling Supabase Constants.swift
+[53/55] Compiling LiveKit Agent.swift
+[54/56] Compiling Oye AppDelegate.swift
+/Users/runner/work/oye/oye/Sources/Oye/Media.swift:173:14: warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+171 |             .select()
+172 |             .single()
+173 |             .execute().value
+    |              `- warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+174 |         conversations.add(row.message, me: me.id)
+175 |         // What you just sent is already on this Mac. A recording lives in a temporary file, so it's
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:137:17: warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+135 |         await withCheckedContinuation { (ready: CheckedContinuation<Void, Never>) in
+136 |             DispatchQueue.global(qos: .userInitiated).async {
+137 |                 session.startRunning()
+    |                 `- warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+138 |                 ready.resume()
+139 |             }
+
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVCaptureSession.h:165:12: note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 163 |  */
+ 164 | API_AVAILABLE(macos(10.7), ios(4.0), macCatalyst(14.0), tvos(17.0), visionos(1.0)) API_UNAVAILABLE(watchos)
+ 165 | @interface AVCaptureSession : NSObject
+     |            `- note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 166 | {
+ 167 | @private
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:3:1: warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'AVFoundation'
+  1 | import AppKit
+  2 | import SwiftUI
+  3 | import AVFoundation
+    | `- warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'AVFoundation'
+  4 | import ScreenCaptureKit
+  5 | import OyeCore
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:150:59: warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+148 |         guard let session = camera else { return }
+149 |         camera = nil
+150 |         DispatchQueue.global(qos: .userInitiated).async { session.stopRunning() }
+    |                                                           `- warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+151 |     }
+152 | 
+
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVCaptureSession.h:165:12: note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 163 |  */
+ 164 | API_AVAILABLE(macos(10.7), ios(4.0), macCatalyst(14.0), tvos(17.0), visionos(1.0)) API_UNAVAILABLE(watchos)
+ 165 | @interface AVCaptureSession : NSObject
+     |            `- note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 166 | {
+ 167 | @private
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:154:110: warning: non-sendable result type 'PostgrestResponse<Store.PersonRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+152 |                 _ = try await client.auth.signInAnonymously()
+153 |             }
+154 |             let row: PersonRow = try await client.rpc("oye_ensure_person", params: ["display_name": myName]).execute().value
+    |                                                                                                              `- warning: non-sendable result type 'PostgrestResponse<Store.PersonRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+155 |             me = row.person
+156 |             if inviteCode == nil { inviteCode = savedInvite(goodFor: 0.5) }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:214:99: warning: non-sendable result type 'PostgrestResponse<[Store.PersonRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+212 |         guard let me else { return }
+213 |         // Row-level security returns you and the people you're linked to.
+214 |         let rows: [PersonRow] = try await client.from("oye_people").select("id, name, last_seen").execute().value
+    |                                                                                                   `- warning: non-sendable result type 'PostgrestResponse<[Store.PersonRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+215 |         let known = Set(people.map(\.id))
+216 |         people = rows.map(\.person).filter { $0.id != me.id }.sorted { $0.name.lowercased() < $1.name.lowercased() }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:225:14: warning: non-sendable result type 'PostgrestResponse<[Store.MessageRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+223 |             .order("created_at", ascending: false)
+224 |             .limit(500)
+225 |             .execute().value
+    |              `- warning: non-sendable result type 'PostgrestResponse<[Store.MessageRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+226 |         var all = Conversations()
+227 |         for row in rows { all.add(row.message, me: me.id) }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:293:68: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+291 |                 self.clock = Date()
+292 |                 if beat % 3 == 0 {
+293 |                     _ = try? await self.client.rpc("oye_check_in").execute()
+    |                                                                    `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+294 |                     try? await self.loadPeople()
+295 |                     try? await self.loadMessages()
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:365:71: warning: non-sendable result type 'PostgrestResponse<String>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+363 |     private func newInvite() async -> String? {
+364 |         do {
+365 |             let code: String = try await client.rpc("oye_new_invite").execute().value
+    |                                                                       `- warning: non-sendable result type 'PostgrestResponse<String>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+366 |             inviteCode = code
+367 |             Prefs.store.set(code, forKey: Self.inviteKey)
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:407:111: warning: non-sendable result type 'PostgrestResponse<[Found]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+405 |         Task {
+406 |             do {
+407 |                 let found: [Found] = try await client.rpc("oye_accept_invite", params: ["invite_code": code]).execute().value
+    |                                                                                                               `- warning: non-sendable result type 'PostgrestResponse<[Found]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+408 |                 try await loadPeople()
+409 |                 notice = found.first.map { "Linked with \($0.name)" } ?? "Linked"
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:418:104: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+416 |     func remove(_ id: UUID) {
+417 |         Task {
+418 |             _ = try? await client.rpc("oye_unlink", params: ["friend_id": id.uuidString.lowercased()]).execute()
+    |                                                                                                        `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+419 |             try? await loadPeople()
+420 |         }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:438:22: warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+436 |                     .select()
+437 |                     .single()
+438 |                     .execute().value
+    |                      `- warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+439 |                 conversations.add(row.message, me: me.id)
+440 |             } catch {
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:451:110: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+449 |         conversations.markRead(from: id, me: me.id, now: Date())
+450 |         if Self.isDemo { return }
+451 |         Task { _ = try? await client.rpc("oye_mark_read", params: ["friend_id": id.uuidString.lowercased()]).execute() }
+    |                                                                                                              `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+452 |     }
+453 | }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+[54/56] Write Objects.LinkFileList
+[55/56] Linking Oye
+Build complete! (158.95s)
+Building for production...
+[0/37] Write sources
+[0/37] Copying PrivacyInfo.xcprivacy
+[0/37] Write sources
+[0/37] Copying PrivacyInfo.xcprivacy
+[0/37] Write sources
+[17/37] Write swift-version--79AA4F9932D1E87A.txt
+[18/37] Copying RustLiveKitUniFFI.framework
+[19/37] Compiling CLiveKitProto timestamp.pb.c
+[20/39] Compiling LKObjCHelpers LKObjCHelpers.m
+[22/40] Compiling OyeCore Capture.swift
+[23/41] Compiling LiveKitUniFFI livekit_common.swift
+[24/42] Compiling IssueReporting ErrorReporting.swift
+[24/42] Copying Fonts
+[26/43] Compiling ConcurrencyExtras ActorIsolated.swift
+[26/43] Copying Demo
+[28/44] Compiling XCTestDynamicOverlay Deprecations.swift
+[28/44] Write sources
+[29/44] Copying LiveKitWebRTC.framework
+[30/44] Write sources
+[32/44] Compiling CLiveKitProto pb_encode.c
+[34/45] Compiling Crypto AES-GCM.swift
+[34/45] Compiling CLiveKitProto pb_decode.c
+[35/45] Compiling CLiveKitProto pb_common.c
+[36/45] Compiling CLiveKitProto lk_abi_check.c
+[37/45] Compiling CLiveKitProto livekit_rtc.pb.c
+[38/45] Compiling CLiveKitProto livekit_models.pb.c
+[39/45] Compiling CLiveKitProto livekit_metrics.pb.c
+[40/45] Write sources
+[42/46] Compiling LiveKitNanopb Nanopb.swift
+[43/47] Compiling Clocks AnyClock.swift
+[44/47] Compiling HTTPTypes HTTP2ErrorCode.swift
+[45/48] Compiling Helpers APIKeyFormat.swift
+[46/50] Compiling Storage Codable.swift
+[47/51] Compiling RealtimeV2 CallbackManager.swift
+[48/52] Compiling PostgREST Defaults.swift
+[49/53] Compiling Functions Exports.swift
+[50/54] Compiling Realtime Defaults.swift
+[51/54] Compiling Auth AuthAdmin.swift
+[52/55] Compiling Supabase Constants.swift
+[53/55] Compiling LiveKit Agent.swift
+[54/56] Compiling Oye AppDelegate.swift
+/Users/runner/work/oye/oye/Sources/Oye/Media.swift:173:14: warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+171 |             .select()
+172 |             .single()
+173 |             .execute().value
+    |              `- warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+174 |         conversations.add(row.message, me: me.id)
+175 |         // What you just sent is already on this Mac. A recording lives in a temporary file, so it's
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:137:17: warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+135 |         await withCheckedContinuation { (ready: CheckedContinuation<Void, Never>) in
+136 |             DispatchQueue.global(qos: .userInitiated).async {
+137 |                 session.startRunning()
+    |                 `- warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+138 |                 ready.resume()
+139 |             }
+
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVCaptureSession.h:165:12: note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 163 |  */
+ 164 | API_AVAILABLE(macos(10.7), ios(4.0), macCatalyst(14.0), tvos(17.0), visionos(1.0)) API_UNAVAILABLE(watchos)
+ 165 | @interface AVCaptureSession : NSObject
+     |            `- note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 166 | {
+ 167 | @private
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:3:1: warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'AVFoundation'
+  1 | import AppKit
+  2 | import SwiftUI
+  3 | import AVFoundation
+    | `- warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'AVFoundation'
+  4 | import ScreenCaptureKit
+  5 | import OyeCore
+
+/Users/runner/work/oye/oye/Sources/Oye/Recorder.swift:150:59: warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+148 |         guard let session = camera else { return }
+149 |         camera = nil
+150 |         DispatchQueue.global(qos: .userInitiated).async { session.stopRunning() }
+    |                                                           `- warning: capture of 'session' with non-sendable type 'AVCaptureSession' in a '@Sendable' closure
+151 |     }
+152 | 
+
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVCaptureSession.h:165:12: note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 163 |  */
+ 164 | API_AVAILABLE(macos(10.7), ios(4.0), macCatalyst(14.0), tvos(17.0), visionos(1.0)) API_UNAVAILABLE(watchos)
+ 165 | @interface AVCaptureSession : NSObject
+     |            `- note: class 'AVCaptureSession' does not conform to the 'Sendable' protocol
+ 166 | {
+ 167 | @private
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:154:110: warning: non-sendable result type 'PostgrestResponse<Store.PersonRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+152 |                 _ = try await client.auth.signInAnonymously()
+153 |             }
+154 |             let row: PersonRow = try await client.rpc("oye_ensure_person", params: ["display_name": myName]).execute().value
+    |                                                                                                              `- warning: non-sendable result type 'PostgrestResponse<Store.PersonRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+155 |             me = row.person
+156 |             if inviteCode == nil { inviteCode = savedInvite(goodFor: 0.5) }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:214:99: warning: non-sendable result type 'PostgrestResponse<[Store.PersonRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+212 |         guard let me else { return }
+213 |         // Row-level security returns you and the people you're linked to.
+214 |         let rows: [PersonRow] = try await client.from("oye_people").select("id, name, last_seen").execute().value
+    |                                                                                                   `- warning: non-sendable result type 'PostgrestResponse<[Store.PersonRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+215 |         let known = Set(people.map(\.id))
+216 |         people = rows.map(\.person).filter { $0.id != me.id }.sorted { $0.name.lowercased() < $1.name.lowercased() }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:225:14: warning: non-sendable result type 'PostgrestResponse<[Store.MessageRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+223 |             .order("created_at", ascending: false)
+224 |             .limit(500)
+225 |             .execute().value
+    |              `- warning: non-sendable result type 'PostgrestResponse<[Store.MessageRow]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+226 |         var all = Conversations()
+227 |         for row in rows { all.add(row.message, me: me.id) }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:293:68: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+291 |                 self.clock = Date()
+292 |                 if beat % 3 == 0 {
+293 |                     _ = try? await self.client.rpc("oye_check_in").execute()
+    |                                                                    `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+294 |                     try? await self.loadPeople()
+295 |                     try? await self.loadMessages()
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:365:71: warning: non-sendable result type 'PostgrestResponse<String>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+363 |     private func newInvite() async -> String? {
+364 |         do {
+365 |             let code: String = try await client.rpc("oye_new_invite").execute().value
+    |                                                                       `- warning: non-sendable result type 'PostgrestResponse<String>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+366 |             inviteCode = code
+367 |             Prefs.store.set(code, forKey: Self.inviteKey)
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:407:111: warning: non-sendable result type 'PostgrestResponse<[Found]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+405 |         Task {
+406 |             do {
+407 |                 let found: [Found] = try await client.rpc("oye_accept_invite", params: ["invite_code": code]).execute().value
+    |                                                                                                               `- warning: non-sendable result type 'PostgrestResponse<[Found]>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+408 |                 try await loadPeople()
+409 |                 notice = found.first.map { "Linked with \($0.name)" } ?? "Linked"
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:418:104: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+416 |     func remove(_ id: UUID) {
+417 |         Task {
+418 |             _ = try? await client.rpc("oye_unlink", params: ["friend_id": id.uuidString.lowercased()]).execute()
+    |                                                                                                        `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+419 |             try? await loadPeople()
+420 |         }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:438:22: warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+436 |                     .select()
+437 |                     .single()
+438 |                     .execute().value
+    |                      `- warning: non-sendable result type 'PostgrestResponse<Store.MessageRow>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+439 |                 conversations.add(row.message, me: me.id)
+440 |             } catch {
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+
+/Users/runner/work/oye/oye/Sources/Oye/Store.swift:451:110: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+449 |         conversations.markRead(from: id, me: me.id, now: Date())
+450 |         if Self.isDemo { return }
+451 |         Task { _ = try? await client.rpc("oye_mark_read", params: ["friend_id": id.uuidString.lowercased()]).execute() }
+    |                                                                                                              `- warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'; this is an error in the Swift 6 language mode
+452 |     }
+453 | }
+
+/Users/runner/work/oye/oye/.build/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 35 | ///
+ 36 | /// - ``string(encoding:)``
+ 37 | public struct PostgrestResponse<T> {
+    |               `- note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+ 38 |   /// The raw response body as `Data`.
+ 39 |   public let data: Data
+[54/56] Write Objects.LinkFileList
+[55/56] Linking Oye
+Build complete! (103.02s)
+Architectures in the fat file: build/Oye.app/Contents/MacOS/Oye are: x86_64 arm64 
+Oye 0.1.18 (build 18)
+build/Oye.app: replacing existing signature
+build/Oye.app: replacing existing signature
+Oye started, fonts found
+pkgbuild: Adding component at /Users/runner/work/oye/oye/build/Oye.app
+pkgbuild: Wrote package to build/Oye-Installer.pkg
+-rw-r--r--  1 runner  staff  25653825 Nov 28 10:37 build/Oye-Installer.pkg
+-rw-r--r--  1 runner  staff  25732083 Nov 28 10:37 build/Oye.zip
+Built build/Oye.app, build/Oye.zip and build/Oye-Installer.pkg
