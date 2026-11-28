@@ -21,7 +21,19 @@ enum Backend {
 /// so every new build would otherwise have to ask for keychain access.
 struct DefaultsAuthStorage: AuthLocalStorage {
     private func key(_ key: String) -> String { "oye.auth." + key }
-    func store(key: String, value: Data) throws { UserDefaults.standard.set(value, forKey: self.key(key)) }
-    func retrieve(key: String) throws -> Data? { UserDefaults.standard.data(forKey: self.key(key)) }
-    func remove(key: String) throws { UserDefaults.standard.removeObject(forKey: self.key(key)) }
+    func store(key: String, value: Data) throws { Prefs.store.set(value, forKey: self.key(key)) }
+    func retrieve(key: String) throws -> Data? { Prefs.store.data(forKey: self.key(key)) }
+    func remove(key: String) throws { Prefs.store.removeObject(forKey: self.key(key)) }
+}
+
+/// Where Oye keeps your name, sign-in and settings. OYE_PROFILE=name gives a second copy of Oye
+/// its own set, so two people can run on one Mac (the live check does this).
+enum Prefs {
+    static let store: UserDefaults = {
+        if let profile = ProcessInfo.processInfo.environment["OYE_PROFILE"], !profile.isEmpty,
+           let own = UserDefaults(suiteName: "com.spacemnke.oye." + profile) {
+            return own
+        }
+        return .standard
+    }()
 }

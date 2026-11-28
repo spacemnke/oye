@@ -159,7 +159,8 @@ extension Store {
 
     private struct TooBig: Error {}
 
-    private func upload(_ file: URL, kind: Message.Kind, name: String?, seconds: Double?, contentType: String, to id: UUID) async throws {
+    /// Puts the file in storage, then adds the message that points at it.
+    func upload(_ file: URL, kind: Message.Kind, name: String?, seconds: Double?, contentType: String, to id: UUID) async throws {
         guard let me else { return }
         let data = try Data(contentsOf: file)
         guard data.count <= Self.largestFile else { throw TooBig() }

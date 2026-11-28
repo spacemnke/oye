@@ -26,7 +26,7 @@ final class Store: ObservableObject {
     @Published private(set) var clock = Date()
 
     private static let nameKey = "oye.myName"
-    var myName: String { Self.isDemo ? "You" : UserDefaults.standard.string(forKey: Self.nameKey) ?? "" }
+    var myName: String { Self.isDemo ? "You" : Prefs.store.string(forKey: Self.nameKey) ?? "" }
 
     /// Demo mode (OYE_DEMO=1): placeholder people and threads, and nothing touches the network.
     /// Used for screenshots and for looking at the app without an account.
@@ -58,8 +58,8 @@ final class Store: ObservableObject {
     var talkIdle: Task<Void, Never>?
     private static let dndKey = "oye.doNotDisturb"
     /// On do not disturb, nobody's voice comes out of this Mac.
-    @Published var doNotDisturb = UserDefaults.standard.bool(forKey: Store.dndKey) {
-        didSet { UserDefaults.standard.set(doNotDisturb, forKey: Self.dndKey) }
+    @Published var doNotDisturb = Prefs.store.bool(forKey: Store.dndKey) {
+        didSet { Prefs.store.set(doNotDisturb, forKey: Self.dndKey) }
     }
 
     init() {
@@ -137,7 +137,7 @@ final class Store: ObservableObject {
     func setName(_ name: String) {
         let clean = String(name.trimmingCharacters(in: .whitespacesAndNewlines).prefix(32))
         guard !clean.isEmpty else { return }
-        UserDefaults.standard.set(clean, forKey: Self.nameKey)
+        Prefs.store.set(clean, forKey: Self.nameKey)
         start()
     }
 

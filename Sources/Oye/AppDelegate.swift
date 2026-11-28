@@ -5,6 +5,7 @@ import OyeCore
 final class AppDelegate: NSObject, NSApplicationDelegate {
     let store = Store()
     private var faces: FaceBar?
+    private var live: LiveCheck?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Oye lives in the menu bar; no Dock icon.
@@ -25,6 +26,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // Screenshots (OYE_SHOTS=folder, with OYE_DEMO): draw the panels to PNGs and leave a thread open.
         if let folder = ProcessInfo.processInfo.environment["OYE_SHOTS"] {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in self?.takeShots(into: folder) }
+            return
+        }
+        // The live check (OYE_LIVE=ana or ben): this copy plays one of two people, for real.
+        let env = ProcessInfo.processInfo.environment
+        if let role = env["OYE_LIVE"].flatMap(LiveCheck.Role.init(rawValue:)), let folder = env["OYE_LIVE_DIR"] {
+            let check = LiveCheck(store: store, role: role, folder: folder) { [weak self] id in self?.faces?.showChat(id) }
+            live = check
+            check.run()
             return
         }
         // First run: nobody knows your name yet, so open the Oye panel to ask.

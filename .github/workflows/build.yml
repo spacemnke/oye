@@ -87,6 +87,38 @@ jobs:
           set -o pipefail
           scripts/bundle.sh release 2>&1 | tee -a /tmp/mac.log
 
+      # The live check: two copies of the packaged app, as two new people, invite each other and send
+      # everything both ways through the real server. It leaves two test accounts behind, so it only
+      # runs when the commit message asks for it with [live].
+      - name: Live check
+        if: contains(github.event.head_commit.message, '[live]')
+        continue-on-error: true
+        run: |
+          mkdir -p /tmp/live
+          APP="$GITHUB_WORKSPACE/build/Oye.app/Contents/MacOS/Oye"
+          OYE_LIVE=ana OYE_LIVE_DIR=/tmp/live OYE_PROFILE="ana-$GITHUB_RUN_NUMBER" "$APP" > /tmp/live/ana.out 2>&1 &
+          ANA=$!
+          OYE_LIVE=ben OYE_LIVE_DIR=/tmp/live OYE_PROFILE="ben-$GITHUB_RUN_NUMBER" "$APP" > /tmp/live/ben.out 2>&1 &
+          BEN=$!
+          for _ in $(seq 1 460); do
+            if [ -f /tmp/live/shot-now.mark ] && [ ! -f /tmp/live/screen.png ]; then
+              sleep 3
+              screencapture -x /tmp/live/screen.png || echo "no screen capture"
+            fi
+            kill -0 $ANA 2>/dev/null || kill -0 $BEN 2>/dev/null || break
+            sleep 1
+          done
+          kill $ANA $BEN 2>/dev/null || true
+          {
+            echo "==== live check, run $GITHUB_RUN_NUMBER, $GITHUB_SHA"
+            cat /tmp/live/ana.log /tmp/live/ben.log 2>/dev/null || echo "no results written"
+            echo "---- ana output"; tail -c 6000 /tmp/live/ana.out
+            echo "---- ben output"; tail -c 6000 /tmp/live/ben.out
+            ls -la /tmp/live
+          } > /tmp/live.log 2>&1
+          cat /tmp/live.log
+          [ "$(grep -c '^[a-z]* RESULT pass' /tmp/live.log)" = "2" ]
+
       - uses: actions/upload-artifact@v4
         with:
           name: Oye
@@ -116,6 +148,10 @@ jobs:
           mkdir -p /tmp/share && cd /tmp/share && git init -q .
           tail -c 200000 /tmp/mac.log > mac.log 2>/dev/null || echo "no log" > mac.log
           cp /tmp/shots/*.png . 2>/dev/null || true
+          if [ -f /tmp/live.log ]; then
+            cp /tmp/live.log live.log
+            for f in /tmp/live/*.png; do [ -f "$f" ] && cp "$f" "live-$(basename "$f")"; done
+          fi
           echo "$STATUS $GITHUB_SHA run $GITHUB_RUN_NUMBER" > mac.status
           git add . && git -c user.name=oye-ci -c user.email=oye-ci@users.noreply.github.com commit -qm "mac log for $GITHUB_SHA"
           git push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" HEAD:refs/heads/ci-logs-mac

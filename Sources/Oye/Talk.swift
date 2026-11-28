@@ -24,6 +24,10 @@ final class TalkLine {
     private var generation = 0
 
     var isOpen: Bool { room != nil }
+    /// How many other people are on the line right now.
+    var others: Int { room?.remoteParticipants.count ?? 0 }
+    /// Connected, not just asked for.
+    var isConnected: Bool { room?.connectionState == .connected }
 
     /// Into the pair's room. Already in it, nothing changes.
     func join(_ pass: Pass) async throws {
@@ -106,9 +110,7 @@ extension Store {
         Task {
             do {
                 guard await AVCaptureDevice.requestAccess(for: .audio) else { throw Recorder.Problem.microphoneOff }
-                let ask = Ask(to: id.uuidString.lowercased(), answer: false)
-                let pass: TalkLine.Pass = try await client.functions.invoke("oye-talk", options: FunctionInvokeOptions(body: ask))
-                try await line.join(pass)
+                try await openLine(to: id)
                 // You may have let go while it connected.
                 if talkingTo == id {
                     line.setTalking(true)
@@ -120,6 +122,13 @@ extension Store {
                 notice = (error as? LocalizedError)?.errorDescription ?? "Couldn't open the line. " + Self.describe(error)
             }
         }
+    }
+
+    /// Asks the server for the line to someone and joins it. Their Oye hears about it and joins too.
+    func openLine(to id: UUID) async throws {
+        let ask = Ask(to: id.uuidString.lowercased(), answer: false)
+        let pass: TalkLine.Pass = try await client.functions.invoke("oye-talk", options: FunctionInvokeOptions(body: ask))
+        try await line.join(pass)
     }
 
     /// You let go.
