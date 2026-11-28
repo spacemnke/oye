@@ -130,6 +130,8 @@ struct ChatView: View {
                     ScrollView {
                         bubbles
                     }
+                    // With a mouse plugged in, macOS keeps a scroll bar on show, and it sat on the bubbles.
+                    .scrollIndicators(.never)
                     .onAppear { scrollToEnd(proxy) }
                     .onChange(of: thread.count) { _, _ in scrollToEnd(proxy) }
                 }

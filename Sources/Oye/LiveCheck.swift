@@ -148,7 +148,7 @@ final class LiveCheck {
         shots(open: ben.id)
 
         store.remove(ben.id)
-        await check("Removing Ben takes him off Ana's Mac", within: 20, { store.people.isEmpty })
+        await check("Removing Ben takes him off Ana's Mac", within: 20, alone: true, { store.people.isEmpty })
     }
 
     // MARK: Ben
@@ -246,7 +246,7 @@ final class LiveCheck {
     /// it means it only arrived on the 30-second re-read, not live.
     @discardableResult
     private func check(_ step: String, within timeout: Double, fast: Double? = nil, since: String? = nil,
-                       _ ready: () -> Bool) async -> Bool {
+                       alone: Bool = false, _ ready: () -> Bool) async -> Bool {
         let began = Date()
         var happened: Date?
         while Date().timeIntervalSince(began) < timeout {
@@ -254,11 +254,12 @@ final class LiveCheck {
                 happened = Date()
                 break
             }
-            if otherStopped(), !ready() { break }
+            // No point waiting on the other copy once it has gone, unless this step doesn't need it.
+            if !alone, otherStopped(), !ready() { break }
             try? await Task.sleep(nanoseconds: 100_000_000)
         }
         guard let happened else {
-            var why = otherStopped() ? "the other copy stopped first" : "nothing after \(Int(timeout)) seconds"
+            var why = !alone && otherStopped() ? "the other copy stopped first" : "nothing after \(Int(timeout)) seconds"
             if let notice = store.notice { why += "; Oye says \"\(notice)\"" }
             if case .offline(let reason) = store.status { why += "; status \"\(reason)\"" }
             fail(step, why)
