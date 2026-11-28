@@ -94,6 +94,18 @@ struct ChatView: View {
                 Bubble(store: store, message: message, mine: message.sender != personID)
                     .id(message.id)
             }
+            // Files on their way to them.
+            ForEach(store.transfers.filter { $0.to == personID }) { transfer in
+                HStack(spacing: 0) {
+                    Spacer(minLength: 0)
+                    Text("Sending \(transfer.name) · \(Labels.percent(transfer.fraction))")
+                        .font(Theme.font(13))
+                        .foregroundStyle(Theme.muted)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                        .frame(maxWidth: 264, alignment: .trailing)
+                }
+            }
         }
     }
 
@@ -449,6 +461,40 @@ private struct Bubble: View {
     }
 
     @ViewBuilder private var content: some View {
+        if store.isGone(message) {
+            // Its three days are up and it was never opened on this Mac.
+            HStack(spacing: 10) {
+                Icon(kind: .file).foregroundStyle(Theme.muted)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(message.fileName ?? goneName)
+                        .font(Theme.font(14, .semibold))
+                        .foregroundStyle(Theme.muted)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                    Text("Expired")
+                        .font(Theme.font(12))
+                        .foregroundStyle(Theme.muted)
+                }
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(Theme.line, lineWidth: 1))
+            .help("Files, voice notes and recordings are kept for 3 days.")
+        } else {
+            live
+        }
+    }
+
+    private var goneName: String {
+        switch message.kind {
+        case .voice: return "Voice note"
+        case .video: return "Video"
+        case .screen: return "Screen recording"
+        default: return "File"
+        }
+    }
+
+    @ViewBuilder private var live: some View {
         switch message.kind {
         case .text:
             Text(message.body)

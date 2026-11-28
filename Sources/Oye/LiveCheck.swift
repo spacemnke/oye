@@ -1,6 +1,7 @@
 import AppKit
 import AVFoundation
 import CryptoKit
+import Security
 import OyeCore
 
 /// The live check: two copies of Oye, signed in as two brand-new people (Ana and Ben), do what two
@@ -9,7 +10,8 @@ import OyeCore
 ///
 /// It drives the same Store the panels use, so what passes here is what the app does. What it
 /// can't do is record: there's no microphone or camera to record from, so the voice note and the
-/// videos it sends are made here instead, in the formats the recorder writes.
+/// videos it sends are made here instead, in the formats the recorder writes. Ben also plays a
+/// stranger with no Oye and no sign-in, to check the pages behind file links and invite links.
 @MainActor
 final class LiveCheck {
     enum Role: String { case ana, ben }
@@ -88,7 +90,35 @@ final class LiveCheck {
         } else {
             fail("Ana's file uploads", "the check couldn't find a file to send")
         }
+        expect("It went to the file server", thread(ben.id).first { $0.kind == .file }?.path?.hasPrefix("p/") == true,
+               "its path is \(thread(ben.id).first { $0.kind == .file }?.path ?? "missing")")
         _ = await waitMark("ben-file", 90)
+
+        // A big one: more than the 50 MB a file used to be limited to, so it goes up in several parts.
+        let big = scratch("Offsite video.bin")
+        if Self.makeBig(at: big, megabytes: 60) {
+            mark("big-sha", sha(big))
+            mark("ana-big")
+            store.sendFiles([big], to: ben.id)
+            await check("Ana's 60 MB file uploads, in parts", within: 240, {
+                thread(ben.id).contains { $0.sender != ben.id && $0.kind == .file && ($0.bytes ?? 0) > 50_000_000 }
+            })
+        } else {
+            skip("Ana's 60 MB file uploads, in parts", "couldn't make a file that size on this machine")
+        }
+        _ = await waitMark("ben-big", 300)
+
+        // A link for anyone: the same photo, for someone who doesn't have Oye.
+        let links = await store.share([photo])
+        if let link = links.first {
+            pass("Ana makes a link anyone can open", nil)
+            expect("The link is on the clipboard", NSPasteboard.general.string(forType: .string) == link, "the clipboard has something else")
+            mark("share-link", link)
+        } else {
+            fail("Ana makes a link anyone can open", store.notice ?? "no link came back")
+        }
+        mark("invite-link", Invite.webLink(for: code, from: "Ana"))
+        _ = await waitMark("ben-link", 120)
 
         // A voice note.
         let tone = scratch("voice.m4a")
@@ -188,6 +218,54 @@ final class LiveCheck {
             _ = await fetched(file, shaMark: "file-sha", step: "Ben downloads it, identical to what Ana sent")
         }
         mark("ben-file")
+
+        func bigOne() -> Message? { thread(ana.id).first { $0.sender == ana.id && $0.kind == .file && ($0.bytes ?? 0) > 50_000_000 } }
+        if await check("Ana's 60 MB file arrives on Ben's Mac", within: 300, since: "ana-big", { bigOne() != nil }), let big = bigOne() {
+            _ = await fetched(big, shaMark: "big-sha", step: "Ben downloads all 60 MB, identical to what Ana sent")
+        }
+        mark("ben-big")
+
+        // From here Ben acts as a stranger: no Oye, no sign-in, just the links.
+        if let link = await waitMark("share-link", 120)?.text, !link.isEmpty {
+            let page = await stranger(link)
+            let html = String(decoding: page.data, as: UTF8.self)
+            try? page.data.write(to: dir.appendingPathComponent("page-file.html"))
+            expect("A stranger opens the file link and sees who sent what", page.status == 200 && html.contains("Ana sent you a file") && html.contains("Team photo.jpg"), "status \(page.status)")
+            expect("The page offers Oye and a way to add Ana", html.contains("Get Oye for Mac") && html.contains("oye://join/" + invite.text), "it doesn't")
+            let file = await stranger(link + "/download")
+            let want = await waitMark("file-sha", 5)?.text
+            expect("The stranger downloads the file, identical to what Ana sent", file.status == 200 && Self.sha(file.data) == want, "status \(file.status), \(file.data.count) bytes")
+            let phone = await stranger(link, mac: false)
+            expect("On a phone the page says Oye is a Mac app", String(decoding: phone.data, as: UTF8.self).contains("Oye is a Mac app"), "status \(phone.status)")
+            let guess = await stranger(Invite.site + "/f/" + String(repeating: "A", count: 38))
+            expect("A guessed link gets nothing", guess.status == 410, "status \(guess.status)")
+            _ = await stranger(link + "/report", method: "POST")
+            let after = await stranger(link + "/download")
+            expect("Reporting the file takes it down", after.status == 410, "status \(after.status)")
+        } else {
+            fail("A stranger opens the file link and sees who sent what", "Ana never made a link")
+        }
+        if let link = await waitMark("invite-link", 30)?.text {
+            let page = await stranger(link)
+            try? page.data.write(to: dir.appendingPathComponent("page-join.html"))
+            let html = String(decoding: page.data, as: UTF8.self)
+            expect("The invite link is a page that says Ana invited you", page.status == 200 && html.contains("Ana invited you to Oye") && html.contains(invite.text), "status \(page.status)")
+        }
+
+        // A friend's file stays between the two of them.
+        if let path = got(.file, from: ana.id)?.path {
+            let nobody = await stranger(Invite.site + "/api/file?key=" + path)
+            expect("Without a sign-in, a friend's file can't be fetched", nobody.status == 401, "status \(nobody.status)")
+            let other = "p/" + UUID().uuidString.lowercased() + "/" + UUID().uuidString.lowercased() + "/x.bin"
+            var refused = false
+            do {
+                try await store.pull(other, to: scratch("x.bin"))
+            } catch FileProblem.notAllowed {
+                refused = true
+            } catch {}
+            expect("Signed in, Ben still can't fetch a file between two other people", refused, "it wasn't refused")
+        }
+        mark("ben-link")
 
         if await check("Ana's voice note arrives on Ben's Mac", within: 120, fast: 15, since: "ana-voice", { got(.voice, from: ana.id) != nil }),
            let voice = got(.voice, from: ana.id) {
@@ -324,6 +402,18 @@ final class LiveCheck {
         Shots.save(ChatView(store: store, personID: id), to: dir.appendingPathComponent(role.rawValue + "-chat.png"))
     }
 
+    /// A plain web request with no sign-in, as a browser on a Mac or a phone would make.
+    private func stranger(_ url: String, mac: Bool = true, method: String = "GET") async -> (status: Int, data: Data) {
+        guard let address = URL(string: url) else { return (0, Data()) }
+        var request = URLRequest(url: address)
+        request.httpMethod = method
+        request.setValue(mac ? "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Safari/605.1.15"
+                             : "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1",
+                         forHTTPHeaderField: "User-Agent")
+        guard let (data, response) = try? await URLSession(configuration: .ephemeral).data(for: request) else { return (0, Data()) }
+        return ((response as? HTTPURLResponse)?.statusCode ?? 0, data)
+    }
+
     // MARK: Notes
 
     private func say(_ line: String) {
@@ -392,6 +482,16 @@ final class LiveCheck {
 
     private static func sha(_ data: Data) -> String {
         SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
+    }
+
+    /// A file of random bytes.
+    private static func makeBig(at url: URL, megabytes: Int) -> Bool {
+        var data = Data(count: megabytes * 1024 * 1024)
+        let filled = data.withUnsafeMutableBytes { bytes -> Bool in
+            guard let base = bytes.baseAddress else { return false }
+            return SecRandomCopyBytes(kSecRandomDefault, bytes.count, base) == errSecSuccess
+        }
+        return filled && (try? data.write(to: url)) != nil
     }
 
     /// A few seconds of a quiet tone, in the format voice notes are recorded in.

@@ -27,6 +27,7 @@ struct HomeView: View {
                 people
                 invite
                 joining
+                anyone
                 Toggle(isOn: $store.doNotDisturb) {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Do not disturb")
@@ -114,7 +115,7 @@ struct HomeView: View {
                 HStack(spacing: 8) {
                     pill(copied ? "Copied" : "Copy invite", filled: true) {
                         NSPasteboard.general.clearContents()
-                        NSPasteboard.general.setString(Invite.shareText(code: code), forType: .string)
+                        NSPasteboard.general.setString(Invite.shareText(code: code, from: store.myName), forType: .string)
                         copied = true
                     }
                     pill("New code", filled: false) {
@@ -122,11 +123,48 @@ struct HomeView: View {
                         store.makeInvite()
                     }
                 }
-                Text("Good for a week. Anyone who opens it is linked with you.")
+                Text("A link that works even if they don't have Oye yet. Good for a week; anyone who uses it is linked with you.")
                     .font(Theme.font(13))
                     .foregroundStyle(Theme.muted)
+                    .fixedSize(horizontal: false, vertical: true)
             } else {
                 pill("Invite someone", filled: true) { store.makeInvite() }
+            }
+        }
+    }
+
+    /// A file for someone who isn't one of your people: it becomes a link.
+    private var anyone: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Send a file to anyone")
+                .font(Theme.font(14, .semibold))
+                .foregroundStyle(Theme.ink)
+            Text("Drop a file on Oye's icon in the menu bar, or choose one. You get a link: anyone who has it can download the file for 3 days.")
+                .font(Theme.font(13))
+                .foregroundStyle(Theme.muted)
+                .fixedSize(horizontal: false, vertical: true)
+            ForEach(store.transfers.filter { $0.to == nil }) { transfer in
+                Text("Uploading \(transfer.name) · \(Labels.percent(transfer.fraction))")
+                    .font(Theme.font(13))
+                    .foregroundStyle(Theme.muted)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+            }
+            ForEach(store.links, id: \.self) { link in
+                Text(link)
+                    .font(Theme.font(13))
+                    .foregroundStyle(Theme.ink)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .textSelection(.enabled)
+            }
+            HStack(spacing: 8) {
+                pill("Choose a file", filled: false) { store.chooseFilesToShare() }
+                if !store.links.isEmpty {
+                    Text(store.links.count == 1 ? "Link copied" : "Links copied")
+                        .font(Theme.font(13))
+                        .foregroundStyle(Theme.muted)
+                }
             }
         }
     }

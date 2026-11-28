@@ -80,7 +80,9 @@ final class OyeCoreTests: XCTestCase {
         XCTAssertEqual(Invite.code(in: "ABCD2345"), "ABCD2345")
         XCTAssertEqual(Invite.code(in: " abcd2345 \n"), "ABCD2345")
         XCTAssertEqual(Invite.code(in: "oye://join/ABCD2345"), "ABCD2345")
-        XCTAssertEqual(Invite.code(in: Invite.shareText(code: "WXYZ6789")), "WXYZ6789")
+        XCTAssertEqual(Invite.code(in: Invite.shareText(code: "WXYZ6789", from: "Ines")), "WXYZ6789")
+        // A name that reads like a code doesn't get mistaken for one.
+        XCTAssertEqual(Invite.code(in: Invite.shareText(code: "WXYZ6789", from: "FERNANDA")), "WXYZ6789")
         XCTAssertNil(Invite.code(in: "hello there"))
         XCTAssertNil(Invite.code(in: "ABCD1234"), "1 isn't in the alphabet")
         XCTAssertNil(Invite.code(in: "ABCD234"), "too short")
@@ -88,6 +90,9 @@ final class OyeCoreTests: XCTestCase {
 
     func testLink() {
         XCTAssertEqual(Invite.link(for: "ABCD2345"), "oye://join/ABCD2345")
+        XCTAssertEqual(Invite.webLink(for: "ABCD2345", from: "Ines Marin"), "https://oye.spacemnke.workers.dev/join/ABCD2345?from=Ines%20Marin")
+        XCTAssertEqual(Invite.webLink(for: "ABCD2345", from: " "), "https://oye.spacemnke.workers.dev/join/ABCD2345")
+        XCTAssertEqual(Invite.webLink(for: "ABCD2345", from: "A&B=<x>"), "https://oye.spacemnke.workers.dev/join/ABCD2345?from=A%26B%3D%3Cx%3E")
     }
 
     // MARK: Timestamps
@@ -199,9 +204,10 @@ final class CaptureTests: XCTestCase {
     func testStopsItselfAtTheLimit() {
         var c = Capture()
         c.start(.video, for: ines, now: t(0))
-        XCTAssertFalse(c.isOver(now: t(119)))
-        XCTAssertTrue(c.isOver(now: t(120)))
-        c.stop(now: t(500))
+        XCTAssertEqual(Capture.longest, 600, "ten minutes")
+        XCTAssertFalse(c.isOver(now: t(599)))
+        XCTAssertTrue(c.isOver(now: t(600)))
+        c.stop(now: t(5000))
         XCTAssertEqual(c.phase, .review(.video, seconds: Capture.longest), "never longer than the limit")
     }
 
@@ -286,5 +292,36 @@ final class CaptureTests: XCTestCase {
         let split = Lineup.split(crowd(5), most: 2) { _ in Lineup.Standing() }
         XCTAssertEqual(split.shown.map(\.name), ["P1", "P2"])
         XCTAssertEqual(split.more.count, 3)
+    }
+
+    // MARK: Files
+
+    func testAFileIsCutIntoEqualPartsWithTheRestLast() {
+        let parts = Files.parts(size: 20, part: 8)
+        XCTAssertEqual(parts.map(\.offset), [0, 8, 16])
+        XCTAssertEqual(parts.map(\.length), [8, 8, 4])
+        XCTAssertEqual(Files.parts(size: 16, part: 8).map(\.length), [8, 8])
+        XCTAssertEqual(Files.parts(size: 3, part: 8).map(\.length), [3])
+        XCTAssertTrue(Files.parts(size: 0, part: 8).isEmpty)
+        // 1 GB in 8 MB parts.
+        XCTAssertEqual(Files.parts(size: Files.largest, part: 8 * 1024 * 1024).count, 128)
+    }
+
+    func testFilesExpireAfterThreeDaysAndTextsNever() {
+        let sent = t(0)
+        let file = Message(id: UUID(), sender: ines, recipient: leo, kind: .file, createdAt: sent)
+        let text = Message(id: UUID(), sender: ines, recipient: leo, kind: .text, body: "hi", createdAt: sent)
+        let day: TimeInterval = 24 * 60 * 60
+        XCTAssertFalse(file.hasExpired(now: sent.addingTimeInterval(3 * day - 1)))
+        XCTAssertTrue(file.hasExpired(now: sent.addingTimeInterval(3 * day + 1)))
+        XCTAssertFalse(text.hasExpired(now: sent.addingTimeInterval(30 * day)))
+    }
+
+    func testBigSizesAndPercentRead() {
+        XCTAssertEqual(Labels.size(1_000_000_000), "1.00 GB")
+        XCTAssertEqual(Labels.size(1_073_741_824), "1.07 GB")
+        XCTAssertEqual(Labels.size(62_914_560), "62.9 MB")
+        XCTAssertEqual(Labels.percent(0.416), "42%")
+        XCTAssertEqual(Labels.percent(3), "100%")
     }
 }

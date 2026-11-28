@@ -47,6 +47,10 @@ final class Store: ObservableObject {
     var startingCapture = false
     var stoppingCapture = false
     var localFiles: [UUID: URL] = [:]
+    /// Files on their way up, for the progress lines.
+    @Published var transfers: [Transfer] = []
+    /// The links you last made for sending to anyone.
+    @Published var links: [String] = []
     var voicePlayer: AVAudioPlayer?
 
     // Hold to talk (the doing is in Talk.swift).
@@ -149,6 +153,7 @@ final class Store: ObservableObject {
             }
             let row: PersonRow = try await client.rpc("oye_ensure_person", params: ["display_name": myName]).execute().value
             me = row.person
+            if inviteCode == nil { inviteCode = savedInvite(goodFor: 0.5) }
             try await loadPeople()
             try await loadMessages()
             try await listen(me: row.id)
@@ -347,16 +352,43 @@ final class Store: ObservableObject {
         return conversations.unread(from: id, me: me.id)
     }
 
+    private static let inviteKey = "oye.invite"
+    private static let inviteDateKey = "oye.inviteMade"
+
     /// A fresh invite code to send someone.
     func makeInvite() {
-        Task {
-            do {
-                let code: String = try await client.rpc("oye_new_invite").execute().value
-                inviteCode = code
-            } catch {
-                notice = Self.describe(error)
-            }
+        Task { _ = await newInvite() }
+    }
+
+    private func newInvite() async -> String? {
+        do {
+            let code: String = try await client.rpc("oye_new_invite").execute().value
+            inviteCode = code
+            Prefs.store.set(code, forKey: Self.inviteKey)
+            Prefs.store.set(Date(), forKey: Self.inviteDateKey)
+            return code
+        } catch {
+            notice = Self.describe(error)
+            return nil
         }
+    }
+
+    /// Your invite code as of last time, if it still has days left (codes last a week).
+    private func savedInvite(goodFor days: Double) -> String? {
+        guard let code = Prefs.store.string(forKey: Self.inviteKey),
+              let made = Prefs.store.object(forKey: Self.inviteDateKey) as? Date,
+              Date().timeIntervalSince(made) < (7 - days) * 86_400 else { return nil }
+        return code
+    }
+
+    /// A code that will outlast a file link (three days), for the "add me" on the link's page.
+    /// Reuses your current one where it can, so links don't use up invites.
+    func inviteForLinks() async -> String? {
+        if let saved = savedInvite(goodFor: 3.5) {
+            if inviteCode == nil { inviteCode = saved }
+            return saved
+        }
+        return await newInvite()
     }
 
     /// Someone's invite, pasted in or opened as a link.

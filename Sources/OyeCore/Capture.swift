@@ -25,8 +25,8 @@ public struct Capture: Equatable, Sendable {
         case review(Kind, seconds: Double)
     }
 
-    /// Recordings stop themselves here, so nothing huge gets sent by accident.
-    public static let longest: TimeInterval = 120
+    /// Recordings stop themselves here, so nothing huge gets sent by accident. Ten minutes.
+    public static let longest: TimeInterval = 600
     /// Shorter than this was a slip of the finger.
     public static let shortest: TimeInterval = 0.5
 
@@ -102,6 +102,11 @@ public enum Labels {
 
     /// 4,200,000 bytes is "4.2 MB"; small files are at least "1 KB".
     public static func size(_ bytes: Int) -> String {
+        if bytes >= 1_000_000_000 {
+            let hundredths = (Double(bytes) / 10_000_000).rounded()
+            let tail = Int(hundredths) % 100
+            return "\(Int(hundredths) / 100).\(tail < 10 ? "0" : "")\(tail) GB"
+        }
         if bytes >= 1_000_000 {
             let tenths = (Double(bytes) / 100_000).rounded()
             return "\(Int(tenths) / 10).\(Int(tenths) % 10) MB"
@@ -116,6 +121,9 @@ public enum Labels {
         let name = id.uuidString.lowercased() + (ext.isEmpty ? "" : "." + ext)
         return "\(sender.uuidString.lowercased())/\(recipient.uuidString.lowercased())/\(name)"
     }
+
+    /// 0.42 is "42%".
+    public static func percent(_ fraction: Double) -> String { "\(Int((min(max(fraction, 0), 1) * 100).rounded()))%" }
 
     /// The voice room two people share for hold to talk. The same whoever asks.
     public static func talkRoom(_ a: UUID, _ b: UUID) -> String {

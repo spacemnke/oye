@@ -150,7 +150,7 @@ jobs:
           cp /tmp/shots/*.png . 2>/dev/null || true
           if [ -f /tmp/live.log ]; then
             cp /tmp/live.log live.log
-            for f in /tmp/live/*.png; do [ -f "$f" ] && cp "$f" "live-$(basename "$f")"; done
+            for f in /tmp/live/*.png /tmp/live/*.html; do [ -f "$f" ] && cp "$f" "live-$(basename "$f")"; done
           fi
           echo "$STATUS $GITHUB_SHA run $GITHUB_RUN_NUMBER" > mac.status
           git add . && git -c user.name=oye-ci -c user.email=oye-ci@users.noreply.github.com commit -qm "mac log for $GITHUB_SHA"

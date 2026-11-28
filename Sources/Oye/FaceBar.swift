@@ -35,6 +35,13 @@ final class FaceBar: NSObject, NSWindowDelegate {
         home.button?.target = self
         home.button?.action = #selector(homeClicked(_:))
         self.home = home
+        // A file dropped on Oye's own icon becomes a link for anyone.
+        if let button = home.button {
+            let catcher = DropCatcher(frame: button.bounds)
+            catcher.autoresizingMask = [.width, .height]
+            catcher.dropped = { [weak self] urls, _ in self?.droppedOnHome(urls) }
+            button.addSubview(catcher)
+        }
 
         let strip = NSStatusBar.system.statusItem(withLength: 0)
         strip.button?.imagePosition = .imageOnly
@@ -122,6 +129,14 @@ final class FaceBar: NSObject, NSWindowDelegate {
                 DispatchQueue.main.async { [weak self] in self?.showChat(id) }
             }
         }
+    }
+
+    private func droppedOnHome(_ urls: [URL]) {
+        guard store.me != nil, store.capture.recording != .screen else { return }
+        let store = self.store
+        Task { await store.share(urls) }
+        // Show the panel, where the upload and then the link appear.
+        if !(panel != nil && openPerson == nil && !moreOpen) { showHome() }
     }
 
     private func dropped(_ urls: [URL], at x: CGFloat) {

@@ -1,6 +1,7 @@
 import Foundation
 
-/// Invite codes: eight characters, no 0, O, 1 or I. Shared as a link (oye://join/CODE) or just the code.
+/// Invite codes: eight characters, no 0, O, 1 or I. Shared as a web link (which works for someone
+/// who doesn't have Oye yet), opened in the app as oye://join/CODE, or typed in as just the code.
 public enum Invite {
     public static let alphabet = Set("ABCDEFGHJKLMNPQRSTUVWXYZ23456789")
     public static let length = 8
@@ -13,7 +14,7 @@ public enum Invite {
     public static func code(in text: String) -> String? {
         let upper = text.uppercased()
         // A link says where the code is.
-        if let range = upper.range(of: "OYE://JOIN/") {
+        if let range = upper.range(of: "/JOIN/") {
             let tail = String(upper[range.upperBound...].prefix(length))
             if isCode(tail) { return tail }
         }
@@ -22,10 +23,23 @@ public enum Invite {
         return runs.map(String.init).first(where: isCode)
     }
 
+    /// Where Oye's pages live: the page behind an invite, and the page behind a file link.
+    public static let site = "https://oye.spacemnke.workers.dev"
+
+    /// The link that opens the app straight to joining.
     public static func link(for code: String) -> String { "oye://join/\(code)" }
 
+    /// The link to send someone: a page that says who invited them and how to get Oye.
+    public static func webLink(for code: String, from name: String) -> String {
+        let clean = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        var allowed = CharacterSet.alphanumerics
+        allowed.insert(charactersIn: "-._~")
+        let who = clean.addingPercentEncoding(withAllowedCharacters: allowed) ?? ""
+        return "\(site)/join/\(code)" + (who.isEmpty ? "" : "?from=\(who)")
+    }
+
     /// What gets copied to send to someone.
-    public static func shareText(code: String) -> String {
-        "Join me on Oye. Open \(link(for: code)) or paste this code in Oye: \(code)"
+    public static func shareText(code: String, from name: String) -> String {
+        "Join me on Oye: \(webLink(for: code, from: name))"
     }
 }

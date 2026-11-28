@@ -104,9 +104,6 @@ extension Store {
 
     // MARK: Files
 
-    /// 100 MB, the same as the storage bucket allows.
-    static let largestFile = 100 * 1024 * 1024
-
     func sendFiles(_ urls: [URL], to id: UUID) {
         for url in urls {
             var isFolder: ObjCBool = false
@@ -157,24 +154,75 @@ extension Store {
         }
     }
 
-    private struct TooBig: Error {}
-
-    /// Puts the file in storage, then adds the message that points at it.
+    /// Puts the file on the file server, then adds the message that points at it.
     func upload(_ file: URL, kind: Message.Kind, name: String?, seconds: Double?, contentType: String, to id: UUID) async throws {
         guard let me else { return }
-        let data = try Data(contentsOf: file)
-        guard data.count <= Self.largestFile else { throw TooBig() }
-        let path = Labels.storagePath(sender: me.id, recipient: id, id: UUID(), fileExtension: file.pathExtension)
-        try await client.storage.from("oye").upload(path, data: data, options: FileOptions(contentType: contentType))
-        let new = NewMedia(sender: me.id, recipient: id, kind: kind.rawValue, path: path, fileName: name, bytes: data.count, seconds: seconds)
+        let label: String
+        switch kind {
+        case .voice: label = "voice note"
+        case .video: label = "video"
+        case .screen: label = "screen recording"
+        default: label = name ?? file.lastPathComponent
+        }
+        let sent = try await push(file, name: label, type: contentType, to: id)
+        let new = NewMedia(sender: me.id, recipient: id, kind: kind.rawValue, path: sent.key, fileName: name, bytes: sent.size, seconds: seconds)
         let row: MessageRow = try await client.from("oye_messages")
             .insert(new, returning: .representation)
             .select()
             .single()
             .execute().value
         conversations.add(row.message, me: me.id)
-        // What you just sent is already on this Mac.
+        // What you just sent is already on this Mac. A recording lives in a temporary file, so it's
+        // kept somewhere lasting: you can still play it after the server's copy has gone.
         localFiles[row.id] = file
+        if kind != .file {
+            let keep = keptCopy(of: row.message)
+            try? FileManager.default.createDirectory(at: keep.deletingLastPathComponent(), withIntermediateDirectories: true)
+            if (try? FileManager.default.copyItem(at: file, to: keep)) != nil { localFiles[row.id] = keep }
+        }
+    }
+
+    // MARK: A link for anyone
+
+    /// Puts files on the server for anyone with the link, and copies the links. They work for three days.
+    @discardableResult
+    func share(_ urls: [URL]) async -> [String] {
+        guard me != nil, !Self.isDemo else { return [] }
+        notice = nil
+        var made: [String] = []
+        let invite = await inviteForLinks()
+        for url in urls {
+            var isFolder: ObjCBool = false
+            guard FileManager.default.fileExists(atPath: url.path, isDirectory: &isFolder), !isFolder.boolValue else {
+                notice = "Folders can't be sent yet. Zip it first."
+                continue
+            }
+            do {
+                let type = UTType(filenameExtension: url.pathExtension)?.preferredMIMEType ?? "application/octet-stream"
+                let sent = try await push(url, name: url.lastPathComponent, type: type, to: nil, invite: invite)
+                if let link = sent.link { made.append(link) }
+            } catch {
+                notice = Self.describeSend(error)
+            }
+        }
+        if !made.isEmpty {
+            links = made
+            NSPasteboard.general.clearContents()
+            NSPasteboard.general.setString(made.joined(separator: "\n"), forType: .string)
+        }
+        return made
+    }
+
+    /// Asks which file to make a link for.
+    func chooseFilesToShare() {
+        let panel = NSOpenPanel()
+        panel.allowsMultipleSelection = true
+        panel.canChooseDirectories = false
+        panel.prompt = "Make link"
+        NSApp.activate(ignoringOtherApps: true)
+        guard panel.runModal() == .OK else { return }
+        let urls = panel.urls
+        Task { await share(urls) }
     }
 
     private func addLocal(_ kind: Message.Kind, to id: UUID, name: String?, bytes: Int?, seconds: Double?, file: URL?) {
@@ -186,24 +234,59 @@ extension Store {
     }
 
     static func describeSend(_ error: Error) -> String {
-        if error is TooBig { return "That's over 100 MB, which is too big to send." }
-        return "That didn't send. " + describe(error)
+        switch error as? FileProblem {
+        case .tooBig?: return "That's over 1 GB, which is too big to send."
+        case .empty?: return "That file is empty."
+        case .tooMuchWaiting?: return "You have a lot waiting to be picked up. Try again once some of it has been."
+        case .notAllowed?: return "That didn't send. They're no longer one of your people."
+        default: return "That didn't send. " + describe(error)
+        }
     }
 
     // MARK: Opening
 
-    /// The file behind a message, on this Mac: already here if you sent it, downloaded if not.
-    func file(for message: Message) async -> URL? {
+    private func named(_ message: Message, in folder: URL) -> URL {
+        let ext = ((message.path ?? "") as NSString).pathExtension
+        let url = folder.appendingPathComponent(message.id.uuidString.lowercased())
+        return ext.isEmpty ? url : url.appendingPathExtension(ext)
+    }
+
+    /// Where a recording you sent is kept on this Mac.
+    func keptCopy(of message: Message) -> URL { named(message, in: Prefs.folder("Sent", in: .applicationSupportDirectory)) }
+
+    /// Where something you received sits once you've opened it.
+    private func receivedCopy(of message: Message) -> URL { named(message, in: Prefs.folder("Received", in: .cachesDirectory)) }
+
+    /// The file behind a message if it's already on this Mac.
+    func localCopy(of message: Message) -> URL? {
         if let known = localFiles[message.id], FileManager.default.fileExists(atPath: known.path) { return known }
+        return [keptCopy(of: message), receivedCopy(of: message)].first { FileManager.default.fileExists(atPath: $0.path) }
+    }
+
+    /// Its three days on the server are up and there's no copy on this Mac.
+    func isGone(_ message: Message) -> Bool {
+        !Self.isDemo && message.hasExpired(now: clock) && localCopy(of: message) == nil
+    }
+
+    /// The file behind a message, on this Mac: already here if you sent or opened it, downloaded if not.
+    func file(for message: Message) async -> URL? {
+        if let local = localCopy(of: message) { return local }
         guard !Self.isDemo, let path = message.path else { return nil }
         do {
-            let data = try await client.storage.from("oye").download(path: path)
-            let folder = FileManager.default.temporaryDirectory.appendingPathComponent("oye-received", isDirectory: true)
-            try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-            let url = folder.appendingPathComponent(message.id.uuidString.lowercased()).appendingPathExtension((path as NSString).pathExtension)
-            try data.write(to: url, options: .atomic)
+            let url = receivedCopy(of: message)
+            if path.hasPrefix("p/") {
+                try await pull(path, to: url)
+            } else {
+                // Sent before files moved to the file server.
+                let data = try await client.storage.from("oye").download(path: path)
+                try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+                try data.write(to: url, options: .atomic)
+            }
             localFiles[message.id] = url
             return url
+        } catch FileProblem.expired {
+            notice = "That's expired. Files are kept for 3 days."
+            return nil
         } catch {
             notice = "Couldn't get that. " + Self.describe(error)
             return nil
