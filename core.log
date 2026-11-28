@@ -1,0 +1,110 @@
+Building for debugging...
+[0/13] Write sources
+[2/13] Write swift-version-24593BA9C3E375BF.txt
+[4/20] Compiling OyeCore Capture.swift
+[5/20] Compiling OyeCore Files.swift
+[6/20] Compiling OyeCore Invite.swift
+[7/20] Compiling OyeCore Lineup.swift
+[8/20] Emitting module OyeCore
+[9/20] Compiling OyeCore Message.swift
+[10/20] Compiling OyeCore Person.swift
+[11/22] Compiling OyeCore SVGPath.swift
+[12/22] Compiling OyeCore Stamp.swift
+[13/23] Wrapping AST for OyeCore for debugging
+[15/25] Compiling OyeCoreTests OyeCoreTests.swift
+[16/25] Emitting module OyeCoreTests
+[17/26] /__w/oye/oye/.build/x86_64-unknown-linux-gnu/debug/OyePackageDiscoveredTests.derived/all-discovered-tests.swift
+[18/26] Write sources
+[19/26] Wrapping AST for OyeCoreTests for debugging
+[21/29] Emitting module OyePackageDiscoveredTests
+[22/29] Compiling OyePackageDiscoveredTests OyeCoreTests.swift
+[23/29] Compiling OyePackageDiscoveredTests all-discovered-tests.swift
+[24/30] /__w/oye/oye/.build/x86_64-unknown-linux-gnu/debug/OyePackageTests.derived/runner.swift
+[25/30] Write sources
+[26/30] Wrapping AST for OyePackageDiscoveredTests for debugging
+[28/32] Emitting module OyePackageTests
+[29/32] Compiling OyePackageTests runner.swift
+[30/33] Wrapping AST for OyePackageTests for debugging
+[31/33] Write Objects.LinkFileList
+[32/33] Linking OyePackageTests.xctest
+Build complete! (7.99s)
+Test Suite 'All tests' started at 2026-11-28 10:32:22.773
+Test Suite 'debug.xctest' started at 2026-11-28 10:32:22.775
+Test Suite 'CaptureTests' started at 2026-11-28 10:32:22.775
+Test Case 'CaptureTests.testAFileIsCutIntoEqualPartsWithTheRestLast' started at 2026-11-28 10:32:22.775
+Test Case 'CaptureTests.testAFileIsCutIntoEqualPartsWithTheRestLast' passed (0.001 seconds)
+Test Case 'CaptureTests.testASlipOfTheFingerIsThrownAway' started at 2026-11-28 10:32:22.775
+Test Case 'CaptureTests.testASlipOfTheFingerIsThrownAway' passed (0.0 seconds)
+Test Case 'CaptureTests.testAnOpenPanelAlwaysKeepsItsFace' started at 2026-11-28 10:32:22.776
+Test Case 'CaptureTests.testAnOpenPanelAlwaysKeepsItsFace' passed (0.0 seconds)
+Test Case 'CaptureTests.testBigSizesAndPercentRead' started at 2026-11-28 10:32:22.776
+Test Case 'CaptureTests.testBigSizesAndPercentRead' passed (0.0 seconds)
+Test Case 'CaptureTests.testBothPeopleGetTheSameTalkRoom' started at 2026-11-28 10:32:22.776
+Test Case 'CaptureTests.testBothPeopleGetTheSameTalkRoom' passed (0.0 seconds)
+Test Case 'CaptureTests.testEveryoneIsShownWhenTheyFit' started at 2026-11-28 10:32:22.776
+Test Case 'CaptureTests.testEveryoneIsShownWhenTheyFit' passed (0.0 seconds)
+Test Case 'CaptureTests.testFilesExpireAfterThreeDaysAndTextsNever' started at 2026-11-28 10:32:22.776
+Test Case 'CaptureTests.testFilesExpireAfterThreeDaysAndTextsNever' passed (0.0 seconds)
+Test Case 'CaptureTests.testLabels' started at 2026-11-28 10:32:22.777
+Test Case 'CaptureTests.testLabels' passed (0.0 seconds)
+Test Case 'CaptureTests.testOnlyOneRecordingAtATime' started at 2026-11-28 10:32:22.777
+Test Case 'CaptureTests.testOnlyOneRecordingAtATime' passed (0.0 seconds)
+Test Case 'CaptureTests.testRecordThenReviewThenClear' started at 2026-11-28 10:32:22.777
+Test Case 'CaptureTests.testRecordThenReviewThenClear' passed (0.0 seconds)
+Test Case 'CaptureTests.testStoppingWhenNotRecordingDoesNothing' started at 2026-11-28 10:32:22.777
+Test Case 'CaptureTests.testStoppingWhenNotRecordingDoesNothing' passed (0.0 seconds)
+Test Case 'CaptureTests.testStopsItselfAtTheLimit' started at 2026-11-28 10:32:22.777
+Test Case 'CaptureTests.testStopsItselfAtTheLimit' passed (0.0 seconds)
+Test Case 'CaptureTests.testStoragePathPutsBothPeopleInTheFolders' started at 2026-11-28 10:32:22.777
+Test Case 'CaptureTests.testStoragePathPutsBothPeopleInTheFolders' passed (0.0 seconds)
+Test Case 'CaptureTests.testUnreadThenHereThenRecentGetThePlaces' started at 2026-11-28 10:32:22.777
+Test Case 'CaptureTests.testUnreadThenHereThenRecentGetThePlaces' passed (0.0 seconds)
+Test Case 'CaptureTests.testWhatEachKindBecomes' started at 2026-11-28 10:32:22.778
+Test Case 'CaptureTests.testWhatEachKindBecomes' passed (0.0 seconds)
+Test Case 'CaptureTests.testWithNothingToGoOnTheFirstPeopleAreShown' started at 2026-11-28 10:32:22.778
+Test Case 'CaptureTests.testWithNothingToGoOnTheFirstPeopleAreShown' passed (0.0 seconds)
+Test Suite 'CaptureTests' passed at 2026-11-28 10:32:22.778
+	 Executed 16 tests, with 0 failures (0 unexpected) in 0.003 (0.003) seconds
+Test Suite 'OyeCoreTests' started at 2026-11-28 10:32:22.778
+Test Case 'OyeCoreTests.testAPersonKeepsTheirColour' started at 2026-11-28 10:32:22.778
+Test Case 'OyeCoreTests.testAPersonKeepsTheirColour' passed (0.0 seconds)
+Test Case 'OyeCoreTests.testFindsACodeHoweverItArrives' started at 2026-11-28 10:32:22.778
+Test Case 'OyeCoreTests.testFindsACodeHoweverItArrives' passed (0.0 seconds)
+Test Case 'OyeCoreTests.testForgettingSomeoneDropsTheirThread' started at 2026-11-28 10:32:22.778
+Test Case 'OyeCoreTests.testForgettingSomeoneDropsTheirThread' passed (0.0 seconds)
+Test Case 'OyeCoreTests.testHereUntilTheyGoQuiet' started at 2026-11-28 10:32:22.779
+Test Case 'OyeCoreTests.testHereUntilTheyGoQuiet' passed (0.0 seconds)
+Test Case 'OyeCoreTests.testInitials' started at 2026-11-28 10:32:22.779
+Test Case 'OyeCoreTests.testInitials' passed (0.0 seconds)
+Test Case 'OyeCoreTests.testLink' started at 2026-11-28 10:32:22.779
+Test Case 'OyeCoreTests.testLink' passed (0.0 seconds)
+Test Case 'OyeCoreTests.testReadsPostgresTimestamps' started at 2026-11-28 10:32:22.779
+Test Case 'OyeCoreTests.testReadsPostgresTimestamps' passed (0.005 seconds)
+Test Case 'OyeCoreTests.testTheSameMessageTwiceIsOneMessage' started at 2026-11-28 10:32:22.784
+Test Case 'OyeCoreTests.testTheSameMessageTwiceIsOneMessage' passed (0.0 seconds)
+Test Case 'OyeCoreTests.testThreadsAreKeptByTheOtherPersonOldestFirst' started at 2026-11-28 10:32:22.784
+Test Case 'OyeCoreTests.testThreadsAreKeptByTheOtherPersonOldestFirst' passed (0.0 seconds)
+Test Case 'OyeCoreTests.testUnreadCountsOnlyWhatTheySentYou' started at 2026-11-28 10:32:22.785
+Test Case 'OyeCoreTests.testUnreadCountsOnlyWhatTheySentYou' passed (0.0 seconds)
+Test Suite 'OyeCoreTests' passed at 2026-11-28 10:32:22.785
+	 Executed 10 tests, with 0 failures (0 unexpected) in 0.007 (0.007) seconds
+Test Suite 'SVGPathTests' started at 2026-11-28 10:32:22.785
+Test Case 'SVGPathTests.testLinesRelativeAndAbsolute' started at 2026-11-28 10:32:22.785
+Test Case 'SVGPathTests.testLinesRelativeAndAbsolute' passed (0.0 seconds)
+Test Case 'SVGPathTests.testNumbersRunTogetherWithoutSpaces' started at 2026-11-28 10:32:22.785
+Test Case 'SVGPathTests.testNumbersRunTogetherWithoutSpaces' passed (0.0 seconds)
+Test Case 'SVGPathTests.testSeveralStrokesInOnePath' started at 2026-11-28 10:32:22.785
+Test Case 'SVGPathTests.testSeveralStrokesInOnePath' passed (0.0 seconds)
+Test Case 'SVGPathTests.testSweepPicksTheOtherSide' started at 2026-11-28 10:32:22.785
+Test Case 'SVGPathTests.testSweepPicksTheOtherSide' passed (0.0 seconds)
+Test Case 'SVGPathTests.testTheMicsCupHangsBelow' started at 2026-11-28 10:32:22.785
+Test Case 'SVGPathTests.testTheMicsCupHangsBelow' passed (0.0 seconds)
+Test Suite 'SVGPathTests' passed at 2026-11-28 10:32:22.785
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'debug.xctest' passed at 2026-11-28 10:32:22.785
+	 Executed 31 tests, with 0 failures (0 unexpected) in 0.01 (0.01) seconds
+Test Suite 'All tests' passed at 2026-11-28 10:32:22.785
+	 Executed 31 tests, with 0 failures (0 unexpected) in 0.01 (0.01) seconds
+◇ Test run started.
+↳ Testing Library Version: 6.0.3 (18c42c19cac3faf)
+✔ Test run with 0 tests passed after 0.001 seconds.
