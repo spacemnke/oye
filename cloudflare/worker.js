@@ -12,7 +12,8 @@
 // so the rules there (row-level security) stay the only rules. Nothing here is secret: the
 // Supabase key is the public one the app already ships with.
 //
-// Bindings: FILES (R2 bucket), SUPABASE_URL, SUPABASE_KEY, INSTALLER (where the app downloads from).
+// Bindings: FILES (R2 bucket), SUPABASE_URL, SUPABASE_KEY, INSTALLER (where the app downloads from),
+// SITE_SOURCE (where the website's files are read from), SITE_PASSWORD (a secret: who may see it).
 // The bucket deletes everything under p/ and s/ after three days; this also refuses anything older.
 
 const KEEP_MS = 3 * 24 * 60 * 60 * 1000;
@@ -51,7 +52,11 @@ async function route(request, env) {
   const join = path.match(/^\/join\/([A-Za-z0-9]{8})$/);
   if (join && method === "GET") return joinPage(request, env, join[1].toUpperCase(), url.searchParams.get("from"));
 
-  if (path === "/" && method === "GET") return homePage(env);
+  // The website, behind a password while it's being worked on.
+  if (path === "/" && method === "GET") return site(request, env, "index.html");
+  if (path === "/enter" && method === "POST") return enter(request, env);
+  const asset = path.match(/^\/site\/([\w-]+(?:\/[\w-]+)*\.(?:webp|png|jpg|svg|css|js))$/);
+  if (asset && method === "GET") return site(request, env, asset[1]);
   return page("Not here", `<h1>Nothing here</h1><p class="muted">This link doesn't go anywhere.</p>`, 404);
 }
 
@@ -327,13 +332,66 @@ function joinPage(request, env, code, fromParam) {
   return page(title, body);
 }
 
-function homePage(env) {
+// MARK: The website
+
+const SITE_TYPES = { html: "text/html; charset=utf-8", webp: "image/webp", png: "image/png", jpg: "image/jpeg", svg: "image/svg+xml", css: "text/css", js: "text/javascript" };
+
+/** What the cookie holds once you've given the password: a hash of it, never the password itself. */
+async function sitePass(env) {
+  const bytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("oye-site|" + env.SITE_PASSWORD));
+  return hex(new Uint8Array(bytes));
+}
+
+async function allowedIn(request, env) {
+  if (!env.SITE_PASSWORD) return false;
+  const cookie = request.headers.get("Cookie") || "";
+  const found = cookie.match(/(?:^|;\s*)oye_site=([0-9a-f]{64})/);
+  return !!found && found[1] === (await sitePass(env));
+}
+
+/** A file of the website (the repo's site/ folder), for someone who's given the password. */
+async function site(request, env, file) {
+  if (!(await allowedIn(request, env))) {
+    return file === "index.html" ? passwordPage(false) : new Response("Not found", { status: 404 });
+  }
+  const response = await fetch(env.SITE_SOURCE + "/" + file, { cf: { cacheTtl: 60 } });
+  if (!response.ok) return page("Not here", `<h1>Nothing here yet</h1><p class="muted">The website isn't in place.</p>`, 404);
+  const headers = {
+    "Content-Type": SITE_TYPES[file.split(".").pop()] || "application/octet-stream",
+    "Cache-Control": file === "index.html" ? "private, no-store" : "private, max-age=3600",
+    "X-Content-Type-Options": "nosniff",
+    "X-Robots-Tag": "noindex",
+    "Referrer-Policy": "no-referrer",
+  };
+  return new Response(response.body, { headers });
+}
+
+async function enter(request, env) {
+  let given = "";
+  try {
+    given = String((await request.formData()).get("password") || "");
+  } catch {}
+  if (!env.SITE_PASSWORD || given !== env.SITE_PASSWORD) return passwordPage(true);
+  return new Response(null, {
+    status: 303,
+    headers: {
+      Location: "/",
+      "Set-Cookie": "oye_site=" + (await sitePass(env)) + "; Path=/; Max-Age=2592000; HttpOnly; Secure; SameSite=Lax",
+      "Cache-Control": "no-store",
+    },
+  });
+}
+
+function passwordPage(wrong) {
   const body = `
-    <h1>Oye</h1>
-    <p class="muted">Your people, in your Mac's menu bar. Text them, hold a button to talk, or drop them a file.</p>
-    <hr>
-    ${pitch(env, true, null, true)}`;
-  return page("Oye", body);
+    <h1>Not open yet</h1>
+    <p class="muted">Oye's website is still being worked on. If you have the password, come in.</p>
+    <form method="post" action="/enter" class="enter">
+      <input type="password" name="password" placeholder="Password" aria-label="Password" autofocus required>
+      <button type="submit" class="button">Enter</button>
+    </form>
+    ${wrong ? `<p class="small" role="alert">That's not it. Try again.</p>` : ""}`;
+  return page("Oye", body, wrong ? 401 : 200);
 }
 
 /** Getting Oye, and (with an invite) linking up with whoever sent this. */
@@ -384,6 +442,10 @@ function page(title, body, status = 200) {
   ol { padding-left: 20px; margin: 0 0 16px; }
   li { margin: 0 0 14px; padding-left: 4px; }
   code { font: 600 15px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--soft); padding: 2px 6px; border-radius: 6px; }
+  .enter { display: flex; gap: 8px; align-items: center; margin: 0 0 12px; }
+  .enter input { flex: 1; min-width: 0; font: inherit; color: var(--ink); padding: 12px 18px; border: 1px solid var(--line); border-radius: 999px; background: #fff; outline: none; }
+  .enter input:focus { border-color: var(--ink); }
+  .enter .button { border: 0; font: inherit; font-weight: 600; cursor: pointer; margin: 0; }
   .report { margin-top: 40px; }
   .report button { background: none; border: 0; padding: 0; color: var(--muted); font: inherit; font-size: 13px; text-decoration: underline; cursor: pointer; }
 </style>
