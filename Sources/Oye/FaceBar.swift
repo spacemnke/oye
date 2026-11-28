@@ -16,6 +16,8 @@ final class FaceBar: NSObject, NSWindowDelegate {
     private var keys: Any?
     /// Whose panel is open. Nil with a panel showing means Oye's own.
     private var openPerson: UUID?
+    /// The panel showing is the list behind "+N".
+    private var moreOpen = false
     /// The point the open panel hangs from: the middle of its face, at the bottom of the menu bar.
     private var anchor = NSPoint.zero
     private var watching: Set<AnyCancellable> = []
@@ -56,7 +58,23 @@ final class FaceBar: NSObject, NSWindowDelegate {
         refresh()
     }
 
-    private var faces: FaceStrip { FaceStrip(people: store.people, open: panel == nil ? nil : openPerson) }
+    /// Who has a face in the menu bar right now, and who is behind "+N". `pin` always gets a face.
+    private func lineup(pinning pin: UUID?) -> (strip: FaceStrip, more: [Person]) {
+        let store = self.store
+        let split = Lineup.split(store.people, most: FaceStrip.most) { person in
+            Lineup.Standing(
+                pinned: person.id == pin || store.talkingTo == person.id || store.hearing == person.id,
+                unread: store.unread(from: person.id) > 0,
+                here: store.isHere(person),
+                last: store.conversations.thread(with: person.id).last?.createdAt
+            )
+        }
+        let strip = FaceStrip(people: split.shown, open: panel == nil ? nil : openPerson, more: split.more.count,
+                              moreUnread: split.more.contains { store.unread(from: $0.id) > 0 })
+        return (strip, split.more)
+    }
+
+    private var faces: FaceStrip { lineup(pinning: panel == nil ? nil : openPerson).strip }
 
     private func refresh() {
         guard let strip else { return }
@@ -107,6 +125,12 @@ final class FaceBar: NSObject, NSWindowDelegate {
     }
 
     private func dropped(_ urls: [URL], at x: CGFloat) {
+        let faces = self.faces
+        // Dropped on "+N": there's no one face to send to, so show who's there.
+        if faces.isMore(at: x) {
+            if !moreOpen { showMore() }
+            return
+        }
         guard let person = faces.person(at: x) else { return }
         store.sendFiles(urls, to: person.id)
         showChat(person.id)
@@ -125,6 +149,11 @@ final class FaceBar: NSObject, NSWindowDelegate {
     @objc private func stripClicked(_ sender: NSStatusBarButton) {
         guard let event = NSApp.currentEvent else { return }
         let x = sender.convert(event.locationInWindow, from: nil).x
+        let faces = self.faces
+        if faces.isMore(at: x) {
+            showMore()
+            return
+        }
         guard let person = faces.person(at: x) else { return }
         if panel != nil, openPerson == person.id {
             close()
@@ -135,16 +164,33 @@ final class FaceBar: NSObject, NSWindowDelegate {
 
     /// Opens someone's panel, as if their face had been clicked.
     func showChat(_ id: UUID) {
-        guard let button = strip?.button, let slot = faces.frames.first(where: { $0.person.id == id }) else { return }
+        // Someone from behind "+N" takes a place in the row while their panel is open.
+        guard let button = strip?.button,
+              let slot = lineup(pinning: id).strip.frames.first(where: { $0.person.id == id }) else { return }
         show(ChatView(store: store, personID: id), under: button, at: slot.rect.midX)
         openPerson = id
         store.markRead(id)
         refresh()
     }
 
+    /// The list behind "+N". Clicking "+N" again closes it.
+    func showMore() {
+        if panel != nil, moreOpen {
+            close()
+            return
+        }
+        let lineup = self.lineup(pinning: nil)
+        guard let button = strip?.button, let chip = lineup.strip.chip else { return }
+        let view = MoreView(store: store, people: lineup.more) { [weak self] id in self?.showChat(id) }
+        show(view, under: button, at: chip.midX)
+        openPerson = nil
+        moreOpen = true
+        refresh()
+    }
+
     func showHome() {
         guard let button = home?.button else { return }
-        if panel != nil, openPerson == nil {
+        if panel != nil, openPerson == nil, !moreOpen {
             close()
             return
         }
@@ -209,6 +255,7 @@ final class FaceBar: NSObject, NSWindowDelegate {
         guard let panel else { return }
         self.panel = nil
         openPerson = nil
+        moreOpen = false
         panel.delegate = nil
         panel.orderOut(nil)
         refresh()

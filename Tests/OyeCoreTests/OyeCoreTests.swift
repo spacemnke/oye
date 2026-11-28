@@ -243,4 +243,48 @@ final class CaptureTests: XCTestCase {
         XCTAssertEqual(Labels.talkRoom(ines, leo), Labels.talkRoom(leo, ines))
         XCTAssertTrue(Labels.talkRoom(ines, leo).hasPrefix("oye-00000000-0000-0000-0000-000000000002_"))
     }
+
+    // MARK: Who fits in the menu bar
+
+    private func crowd(_ count: Int) -> [Person] {
+        (1...count).map { Person(id: UUID(uuidString: String(format: "00000000-0000-0000-0000-%012d", 500 + $0))!, name: "P\($0)") }
+    }
+
+    func testEveryoneIsShownWhenTheyFit() {
+        let people = crowd(6)
+        let split = Lineup.split(people, most: 6) { _ in Lineup.Standing() }
+        XCTAssertEqual(split.shown, people)
+        XCTAssertTrue(split.more.isEmpty)
+    }
+
+    func testUnreadThenHereThenRecentGetThePlaces() {
+        let people = crowd(8)
+        let now = Date()
+        let split = Lineup.split(people, most: 3) { person in
+            switch person.name {
+            case "P8": return Lineup.Standing(unread: true)
+            case "P5": return Lineup.Standing(here: true)
+            case "P7": return Lineup.Standing(last: now)
+            case "P2": return Lineup.Standing(last: now.addingTimeInterval(-600))
+            default: return Lineup.Standing()
+            }
+        }
+        // The places go to P8, P5 and P7, and they stay in the order people came in.
+        XCTAssertEqual(split.shown.map(\.name), ["P5", "P7", "P8"])
+        XCTAssertEqual(split.more.map(\.name), ["P1", "P2", "P3", "P4", "P6"])
+    }
+
+    func testAnOpenPanelAlwaysKeepsItsFace() {
+        let people = crowd(8)
+        let split = Lineup.split(people, most: 2) { person in
+            Lineup.Standing(pinned: person.name == "P6", unread: person.name == "P1" || person.name == "P2")
+        }
+        XCTAssertEqual(split.shown.map(\.name), ["P1", "P6"])
+    }
+
+    func testWithNothingToGoOnTheFirstPeopleAreShown() {
+        let split = Lineup.split(crowd(5), most: 2) { _ in Lineup.Standing() }
+        XCTAssertEqual(split.shown.map(\.name), ["P1", "P2"])
+        XCTAssertEqual(split.more.count, 3)
+    }
 }

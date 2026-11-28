@@ -21,7 +21,10 @@ enum Shots {
 
     /// The menu bar faces, enlarged, on a menu-bar grey.
     static func saveStrip(store: Store, open: UUID?, to url: URL) {
-        let strip = FaceStrip(people: store.people, open: open)
+        saveStrip(FaceStrip(people: store.people, open: open), store: store, to: url)
+    }
+
+    static func saveStrip(_ strip: FaceStrip, store: Store, to url: URL) {
         let image = strip.image(photo: { store.photo(for: $0) }, here: { store.isHere($0) }, unread: { store.unread(from: $0.id) > 0 })
         let size = NSSize(width: strip.width + 16, height: FaceStrip.height + 8)
         guard let rep = bitmap(size, scale: 6) else { return }

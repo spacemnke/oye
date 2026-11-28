@@ -66,12 +66,38 @@ struct FaceStrip {
     static let overlap: CGFloat = 3
     static let pad: CGFloat = 5
 
+    /// More people than this and the rest go behind "+N".
+    static let most = 6
+    static let chipGap: CGFloat = 4
+
     let people: [Person]
     let open: UUID?
+    /// How many people are behind "+N".
+    var more = 0
+    /// One of them has something new for you.
+    var moreUnread = false
+
+    private var facesWidth: CGFloat {
+        CGFloat(people.count) * Self.face - CGFloat(max(people.count - 1, 0)) * Self.overlap
+    }
 
     var width: CGFloat {
         guard !people.isEmpty else { return 0 }
-        return Self.pad * 2 + CGFloat(people.count) * Self.face - CGFloat(people.count - 1) * Self.overlap
+        return Self.pad * 2 + facesWidth + (more > 0 ? Self.chipGap + chipWidth : 0)
+    }
+
+    private var chipWidth: CGFloat { more > 9 ? 23 : Self.face }
+
+    /// Where "+N" sits, after the last face.
+    var chip: NSRect? {
+        guard more > 0, !people.isEmpty else { return nil }
+        return NSRect(x: Self.pad + facesWidth + Self.chipGap, y: (Self.height - Self.face) / 2, width: chipWidth, height: Self.face)
+    }
+
+    /// Whether this x is on "+N" and not on a face.
+    func isMore(at x: CGFloat) -> Bool {
+        guard let chip else { return false }
+        return x >= chip.minX - Self.chipGap / 2
     }
 
     /// Where each face sits, left to right (the slot, before the open one grows).
@@ -118,6 +144,26 @@ struct FaceStrip {
                 Avatar.draw(person, photo: photo(person), in: rect, alpha: here(person) || isOpen ? 1 : 0.45)
                 if unread(person), !isOpen {
                     let dot = NSRect(x: rect.maxX - 6.5, y: rect.maxY - 6.5, width: 7, height: 7)
+                    context.compositingOperation = .destinationOut
+                    NSBezierPath(ovalIn: dot.insetBy(dx: -1, dy: -1)).fill()
+                    context.compositingOperation = .sourceOver
+                    Theme.accentNS.setFill()
+                    NSBezierPath(ovalIn: dot).fill()
+                }
+            }
+            if let chip = self.chip {
+                // "+N", in the menu bar's own text colour so it works on light and dark bars.
+                NSColor.labelColor.withAlphaComponent(0.16).setFill()
+                NSBezierPath(roundedRect: chip, xRadius: chip.height / 2, yRadius: chip.height / 2).fill()
+                let text = "+\(self.more)" as NSString
+                let attributes: [NSAttributedString.Key: Any] = [
+                    .font: Theme.nsFont(8.5, .semibold),
+                    .foregroundColor: NSColor.labelColor
+                ]
+                let size = text.size(withAttributes: attributes)
+                text.draw(at: NSPoint(x: chip.midX - size.width / 2, y: chip.midY - size.height / 2), withAttributes: attributes)
+                if self.moreUnread {
+                    let dot = NSRect(x: chip.maxX - 5.5, y: chip.maxY - 6.5, width: 7, height: 7)
                     context.compositingOperation = .destinationOut
                     NSBezierPath(ovalIn: dot.insetBy(dx: -1, dy: -1)).fill()
                     context.compositingOperation = .sourceOver

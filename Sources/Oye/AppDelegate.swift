@@ -71,6 +71,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 Shots.save(ChatView(store: self.store, personID: open.id), to: dir.appendingPathComponent("review-\(name).png"))
                 self.store.capture.clear()
             }
+            // More people than fit in the menu bar: the row with "+N", and the list behind it.
+            note("drawing the crowd")
+            func extra(_ n: Int, _ name: String, here: Bool) -> Person {
+                Person(id: UUID(uuidString: String(format: "00000000-0000-0000-0000-%012d", 100 + n))!, name: name, lastSeen: here ? now : nil)
+            }
+            let crowd = self.store.people + [
+                extra(1, "Noor Haddad", here: true), extra(2, "Sam Okafor", here: false), extra(3, "Yuki Tanaka", here: true),
+                extra(4, "Elena Rossi", here: false), extra(5, "Dev Patel", here: false), extra(6, "Carla Mendes", here: true)
+            ]
+            let split = Lineup.split(crowd, most: FaceStrip.most) { person in
+                Lineup.Standing(here: self.store.isHere(person), last: self.store.conversations.thread(with: person.id).last?.createdAt)
+            }
+            Shots.saveStrip(FaceStrip(people: split.shown, open: nil, more: split.more.count), store: self.store,
+                            to: dir.appendingPathComponent("faces-more.png"))
+            Shots.save(MoreView(store: self.store, people: split.more, open: { _ in }), to: dir.appendingPathComponent("more.png"))
             note("drawing home")
             Shots.save(HomeView(store: self.store), to: dir.appendingPathComponent("home.png"))
             note("done")
